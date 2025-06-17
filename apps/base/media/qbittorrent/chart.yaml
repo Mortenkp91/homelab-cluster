@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: media
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: qbittorrent
+    namespace: media
+  interval: 10m
+  values:
+      controllers:
+        main:
+          strategy: Recreate
+          containers:
+            main:
+              image:
+                repository: ghcr.io/home-operations/qbittorrent
+                pullPolicy: IfNotPresent
+                tag: 5.1.0
+              env:
+                TZ: Europe/Copenhagen
+              # resources:
+              #   requests:
+              #     cpu: 10m
+              #     memory: 256Mi
+              #   limits:
+              #     memory: 2Gi
