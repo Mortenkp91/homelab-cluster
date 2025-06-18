@@ -1,7 +1,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: media
+  name: qbittorrent
+  namespace: media
 spec:
   chartRef:
     kind: OCIRepository
