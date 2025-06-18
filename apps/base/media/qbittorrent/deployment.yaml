@@ -7,12 +7,11 @@ spec:
   selector:
     matchLabels:
       app: qbittorrent
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
         app: qbittorrent
-        policy-type: "app"
     spec:
       restartPolicy: Always
       containers:
