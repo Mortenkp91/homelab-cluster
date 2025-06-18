@@ -10,11 +10,10 @@
 #     semver: "0.4.1"
 
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
+kind: HelmRepository
 metadata:
   name: podinfo
+  namespace: flux-system
 spec:
-  interval: 1m0s
-  url: oci://ghcr.io/stefanprodan/charts/podinfo
-  ref:
-    semver: "^6.5.0"
+  interval: 1m
+  url: https://stefanprodan.github.io/podinfo
