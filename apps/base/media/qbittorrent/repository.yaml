@@ -4,5 +4,5 @@ metadata:
   name: qbittorrent
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 1m0s
   url: oci://ghcr.io/gabe565/charts/qbittorrent
