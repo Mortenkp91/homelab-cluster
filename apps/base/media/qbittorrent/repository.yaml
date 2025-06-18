@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: gabe565
+  name: qbittorrent
 spec:
   interval: 5m0s
-  url: oci://ghcr.io/gabe565/charts
+  url: oci://ghcr.io/gabe565/charts/qbittorrent
