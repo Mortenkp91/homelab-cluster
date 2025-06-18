@@ -16,7 +16,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: qbittorrent
-          image: ghcr.io/linuxserver/qbittorrent:5.1.0-r0
+          image: ghcr.io/linuxserver/qbittorrent:5.1.0
           imagePullPolicy: IfNotPresent
 
           envFrom:
