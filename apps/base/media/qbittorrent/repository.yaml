@@ -1,0 +1,19 @@
+# # apiVersion: source.toolkit.fluxcd.io/v1
+# # kind: OCIRepository
+# # metadata:
+# #   name: qbittorrent
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   url: oci://ghcr.io/gabe565/charts/qbittorrent
+# #   ref:
+# #     semver: "0.4.1"
+
+# apiVersion: source.toolkit.fluxcd.io/v1
+# kind: HelmRepository
+# metadata:
+#   name: gabe565
+#   namespace: flux-system
+# spec:
+#   interval: 1m
+#   url: https://charts.gabe565.com

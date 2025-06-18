@@ -1,0 +1,46 @@
+# nfs-persistent-volumes.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-media
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-media
+  nfs:
+    server: 192.168.1.224 
+    path: /srv/nfs/media
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-configs
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-configs
+  nfs:
+    server: 192.168.1.224
+    path: /srv/nfs/configs
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-nvr
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-nvr
+  nfs:
+    server: 192.168.1.224
+    path: /srv/nfs/nvr

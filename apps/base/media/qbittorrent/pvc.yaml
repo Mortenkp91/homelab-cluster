@@ -1,0 +1,12 @@
+# jellyfin-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-media-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media
+  resources:
+    requests:
+      storage: 1Ti
