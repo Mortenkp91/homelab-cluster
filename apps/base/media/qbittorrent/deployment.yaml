@@ -34,16 +34,16 @@ spec:
               name: torrent-udp
               protocol: UDP
 
-          volumeMounts:
-          - name: media
-            mountPath: /media
+          # volumeMounts:
+          # - name: media
+          #   mountPath: /media
           # - name: config
           #   mountPath: /config
 
-      volumes:
-      - name: media
-        persistentVolumeClaim:
-          claimName: media-shared-pvc
+      # volumes:
+      # - name: media
+      #   persistentVolumeClaim:
+      #     claimName: media-shared-pvc
       # - name: config
       #   persistentVolumeClaim:
       #     claimName: qbittorrent-config-pvc
