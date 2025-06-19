@@ -42,6 +42,8 @@ spec:
         - name: media
           mountPath: /media/tv
           readOnly: true
+        - name: quicksync
+          mountPath: /dev/dri
         ports:
         - containerPort: 8096
       volumes:
