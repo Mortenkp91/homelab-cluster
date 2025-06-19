@@ -7,7 +7,7 @@ spec:
   capacity:
     storage: 1Ti
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-media
   nfs:
@@ -22,7 +22,7 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-configs
   nfs:
@@ -38,7 +38,7 @@ spec:
   capacity:
     storage: 500Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-nvr
   nfs:

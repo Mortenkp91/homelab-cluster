@@ -25,6 +25,12 @@ spec:
           image: ghcr.io/linuxserver/qbittorrent:5.1.0-r0-ls398
           imagePullPolicy: IfNotPresent
 
+          resources:
+            limits:
+              memory: "2Gi"
+            requests:
+              memory: "512Mi"
+
           envFrom:
           - configMapRef:
              name: qbittorrent
@@ -40,19 +46,19 @@ spec:
               name: torrent-udp
               protocol: UDP
 
-          volumeMounts:
-          - name: media
-            mountPath: /media
-          - name: config
-            mountPath: /config
+      #     volumeMounts:
+      #     - name: media
+      #       mountPath: /media
+      #     - name: config
+      #       mountPath: /config
 
-      volumes:
-      - name: media
-        persistentVolumeClaim:
-          claimName: media-shared-pvc
-      - name: config
-        persistentVolumeClaim:
-          claimName: qbittorrent-config-pvc
+      # volumes:
+      # - name: media
+      #   persistentVolumeClaim:
+      #     claimName: media-shared-pvc
+      # - name: config
+      #   persistentVolumeClaim:
+      #     claimName: qbittorrent-config-pvc
 
 ---
 kind: Service
