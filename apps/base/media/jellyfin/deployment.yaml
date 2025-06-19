@@ -17,13 +17,12 @@ spec:
       restartPolicy: Always
       
       securityContext:
-        runAsNonRoot: true
         runAsUser: 1001
         runAsGroup: 1001
 
       resources:
         limits:
-          memory: "4Gi"
+          memory: "6Gi"
           cpu: "3000m"
         requests:
           memory: "512Mi"
@@ -32,13 +31,17 @@ spec:
       containers:
       - name: jellyfin
         image: jellyfin/jellyfin
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: config
           mountPath: /config
         - name: media
           mountPath: /media/movies
+          readOnly: true
         - name: media
           mountPath: /media/tv
+          readOnly: true
         ports:
         - containerPort: 8096
       volumes:
@@ -48,3 +51,7 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: media-shared-pvc
+      - name: quicksync
+        hostPath:
+          path: /dev/dri
+          
