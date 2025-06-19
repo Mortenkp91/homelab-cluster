@@ -14,33 +14,65 @@ spec:
     server: 192.168.1.224 
     path: /srv/nfs/media
 ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: pv-nfs-configs
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: nfs-configs
+#   nfs:
+#     server: 192.168.1.224
+#     path: /srv/nfs/configs
+# ---
+
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-configs
+  name: pv-nfs-qbittorrent-config
 spec:
   capacity:
-    storage: 10Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-configs
   nfs:
     server: 192.168.1.224
-    path: /srv/nfs/configs
+    path: /srv/nfs/configs/qbittorrent
 ---
 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-nvr
+  name: pv-nfs-jellyfin-config
 spec:
   capacity:
-    storage: 500Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-nvr
+  storageClassName: nfs-configs
   nfs:
     server: 192.168.1.224
-    path: /srv/nfs/nvr
+    path: /srv/nfs/configs/jellyfin
+---
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: pv-nfs-nvr
+# spec:
+#   capacity:
+#     storage: 500Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: nfs-nvr
+#   nfs:
+#     server: 192.168.1.224
+#     path: /srv/nfs/nvr
