@@ -46,26 +46,26 @@ spec:
               name: torrent-udp
               protocol: UDP
 
-      #     volumeMounts:
-      #     - name: media
-      #       mountPath: /media
-      #     - name: config
-      #       mountPath: /config
+          volumeMounts:
+          - name: media
+            mountPath: /media
+          - name: config
+            mountPath: /config
 
-      # volumes:
-      # - name: media
-      #   persistentVolumeClaim:
-      #     claimName: media-shared-pvc
-      # - name: config
-      #   persistentVolumeClaim:
-      #     claimName: qbittorrent-config-pvc
+      volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: media-shared-pvc
+      - name: config
+        persistentVolumeClaim:
+          claimName: qbittorrent-config-pvc
 
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: qbittorrent-tcp-svc            
-  namespace: media     
+  namespace: media
 spec:
   selector:
     app: qbittorrent       
