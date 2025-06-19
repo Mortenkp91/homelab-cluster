@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jellyfin-svc            
+  namespace: media
+spec:
+  selector:
+    app: jellyfin       
+  ports:                      
+  - port: 8096            
+    targetPort: 8096      
+    name: web-ui         
+    protocol: TCP
+  type: ClusterIP
