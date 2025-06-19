@@ -35,9 +35,9 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: videos
+        - name: media
           mountPath: /media/movies
-        - name: tv
+        - name: media
           mountPath: /media/tv
         ports:
         - containerPort: 8096
