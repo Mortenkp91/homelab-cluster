@@ -14,6 +14,9 @@ spec:
         app: jellyfin
     spec:
 
+      nodeSelector:
+        node-role.kubernetes.io/master: true
+
       restartPolicy: Always
       
       securityContext:
