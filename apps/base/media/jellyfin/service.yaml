@@ -7,7 +7,7 @@ spec:
   selector:
     app: jellyfin       
   ports:                      
-  - port: 8096            
+  - port: 80            
     targetPort: 8096      
     name: web-ui         
     protocol: TCP

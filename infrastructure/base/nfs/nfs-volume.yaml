@@ -11,7 +11,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-media
   nfs:
-    server: 192.168.1.224 
+    server: 10.20.22.81 
     path: /srv/nfs/media
 ---
 # apiVersion: v1
@@ -42,7 +42,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-configs
   nfs:
-    server: 192.168.1.224
+    server: 10.20.22.81
     path: /srv/nfs/configs/qbittorrent
 ---
 
@@ -58,7 +58,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-configs
   nfs:
-    server: 192.168.1.224
+    server: 10.20.22.81
     path: /srv/nfs/configs/jellyfin
 ---
 
