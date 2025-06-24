@@ -5,3 +5,4 @@ resources:
   - kubevip
   - kubevip-cloud-controller
   - traefik
+  - cert-manager
