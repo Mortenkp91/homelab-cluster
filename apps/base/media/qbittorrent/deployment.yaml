@@ -65,37 +65,3 @@ spec:
         persistentVolumeClaim:
           claimName: qbittorrent-config-pvc
 
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: qbittorrent-tcp-svc            
-  namespace: media
-spec:
-  selector:
-    app: qbittorrent       
-  ports:                      
-  - port: 8080             
-    targetPort: 8080      
-    name: web-ui         
-    protocol: TCP
-  - port: 6881
-    targetPort: 6881
-    name: torrent-tcp
-    protocol: TCP  
-  type: ClusterIP
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: qbittorrent-udp-svc            
-  namespace: media     
-spec:
-  selector:
-    app: qbittorrent       
-  ports:
-  - port: 6881               
-    targetPort: 6881        
-    name: torrent-udp         
-    protocol: UDP
-  type: ClusterIP
