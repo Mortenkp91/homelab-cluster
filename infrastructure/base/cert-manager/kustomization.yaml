@@ -4,4 +4,3 @@ resources:
   - chart.yaml
   - namespace.yaml
   - repository.yaml
-  - namespace.yaml
