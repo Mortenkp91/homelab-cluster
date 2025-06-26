@@ -7,4 +7,3 @@ resources:
   - traefik
   - node-feature-discovery
   # - intel-device-plugins-operator
-  # - cert-manager
