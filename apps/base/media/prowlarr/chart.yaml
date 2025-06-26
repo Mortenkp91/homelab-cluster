@@ -1,19 +1,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: podinfo
   namespace: media
 spec:
+  chartRef:
+    kind: OCIRepository
+    name: prowlarr
+    namespace: media
   interval: 10m
-  chart:
-    spec:
-      chart: prowlarr
-      version: '3.0.0'
-      sourceRef:
-        kind: OCIRepository
-        name: prowlarr
-        namespace: media
-      interval: 10m
   values:
     config:
       persistence:
