@@ -4,13 +4,5 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-
-helmCharts:
-  - name: cert-manager
-    repo: https://charts.jetstack.io
-    version: 1.14.5
-    includeCRDs: true
-    releaseName: cert-manager
-    namespace: cert-manager
-    valuesInline:
-      installCRDs: true
+  - repositort.yaml
+  - chart.yaml
