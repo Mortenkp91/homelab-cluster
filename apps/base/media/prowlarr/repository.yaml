@@ -1,0 +1,8 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: prowlarr
+  namespace: media
+spec:
+  interval: 1m
+  url: oci://ghcr.io/m0nsterrr/helm-charts/prowlarr

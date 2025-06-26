@@ -61,6 +61,51 @@ spec:
     server: 10.20.22.81
     path: /srv/nfs/configs/jellyfin
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-prowlarr-config
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-configs
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/configs/prowlarr
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-sonarr-config
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-configs
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/configs/sonarr
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-radarr-config
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-configs
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/configs/radarr
+---
 
 # apiVersion: v1
 # kind: PersistentVolume
