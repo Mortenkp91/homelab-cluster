@@ -5,5 +5,5 @@ resources:
   - kubevip
   - kubevip-cloud-controller
   - traefik
-  - node-feature-discovery
+  # - node-feature-discovery
   # - intel-device-plugins-operator

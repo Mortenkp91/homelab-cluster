@@ -20,8 +20,7 @@ spec:
       restartPolicy: Always
       
       securityContext:
-        runAsUser: 1001
-        runAsGroup: 1001
+        
 
       resources:
         limits:
@@ -46,7 +45,7 @@ spec:
           mountPath: /media/tv
           readOnly: true
         - name: quicksync
-          mountPath: /dev/dri
+          mountPath: /dev/dri/renderD128
         ports:
         - containerPort: 8096
       volumes:
@@ -58,5 +57,4 @@ spec:
           claimName: media-shared-pvc
       - name: quicksync
         hostPath:
-          path: /dev/dri
-          
+          path: /dev/dri/renderD128
