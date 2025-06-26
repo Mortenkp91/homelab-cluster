@@ -18,7 +18,10 @@ spec:
         node-role.kubernetes.io/master: "true"
 
       restartPolicy: Always
-    
+
+      securityContext:
+        runAsNonRoot: false        
+
       resources:
         limits:
           memory: "6Gi"
@@ -55,4 +58,3 @@ spec:
       - name: quicksync
         hostPath:
           path: /dev/dri/renderD128
-
