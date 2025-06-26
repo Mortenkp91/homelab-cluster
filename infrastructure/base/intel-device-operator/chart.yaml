@@ -13,3 +13,7 @@ spec:
         namespace: intel-device-plugins
       version: 0.32.1
   interval: 1m0s
+  values:
+    manager:
+      devices:
+        gpu: true
