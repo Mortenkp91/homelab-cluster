@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: podinfo
+  name: prowlarr
   namespace: media
 spec:
   chartRef:
@@ -12,6 +12,7 @@ spec:
   values:
     config:
       persistence:
+        name: prowlarr-config-pvc
         size: "1Gi"
         volumeName: pv-nfs-prowlarr-config
     ingress:
