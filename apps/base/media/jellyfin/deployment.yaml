@@ -19,11 +19,7 @@ spec:
 
       restartPolicy: Always
       
-      securityContext:
-        runAsUser: 1001
-        runAsGroup: 1001
-      
-
+    
       resources:
         limits:
           memory: "6Gi"
@@ -35,8 +31,8 @@ spec:
       containers:
       - name: jellyfin
         image: jellyfin/jellyfin
-        # securityContext:
-        #   privileged: true
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: config
           mountPath: /config
