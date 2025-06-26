@@ -4,5 +4,5 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - repositort.yaml
+  - repository.yaml
   - chart.yaml
