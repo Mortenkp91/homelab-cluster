@@ -4,5 +4,5 @@ resources:
 - ../base/media/namespace.yaml
 - ../base/media/shared-pvc.yaml
 - ./media/qbittorrent
-- ./media/jellyfin
+# - ./media/jellyfin
 # - ./media/prowlarr
