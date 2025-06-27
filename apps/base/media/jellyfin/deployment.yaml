@@ -62,7 +62,7 @@ spec:
           mountPath: /media/tv
           readOnly: true
         - name: 'render-device'
-          mountPath: '/dev/dri/renderD128'
+          mountPath: '/dev/dri'
 
 
       volumes:
@@ -74,4 +74,4 @@ spec:
           claimName: media-shared-pvc
       - name: 'render-device'
         hostPath:
-          path: '/dev/dri/renderD128'
+          path: '/dev/dri'
