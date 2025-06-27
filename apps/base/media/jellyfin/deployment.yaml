@@ -29,13 +29,15 @@ spec:
         limits:
           memory: "6Gi"
           cpu: "3000m"
+          gpu.intel.com/i915: "1"
         requests:
           memory: "512Mi"
           cpu: "600m"
+          gpu.intel.com/i915: "1"
 
       containers:
       - name: jellyfin
-        image: linuxserver/jellyfin:10.10.7
+        image: jellyfin/jellyfin
 
         ports:
         - containerPort: 8096
