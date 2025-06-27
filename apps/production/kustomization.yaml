@@ -5,4 +5,4 @@ resources:
 - ../base/media/shared-pvc.yaml
 - ./media/qbittorrent
 - ./media/jellyfin
-- ./media/prowlarr
+# - ./media/prowlarr
