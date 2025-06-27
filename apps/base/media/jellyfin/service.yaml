@@ -6,9 +6,9 @@ metadata:
 spec:
   selector:
     app: jellyfin       
-  ports:                      
-  - port: 80
-    targetPort: 8096
-    name: web-ui         
+  ports:
+  - name: web
+    port: 8096
     protocol: TCP
+    targetPort: 8096
   type: ClusterIP
