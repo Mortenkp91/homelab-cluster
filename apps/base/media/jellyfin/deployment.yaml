@@ -61,9 +61,8 @@ spec:
         - name: media
           mountPath: /media/tv
           readOnly: true
-        # Mount /dev/dri as a directory (closest to Docker Compose devices)
-        - name: dev-dri
-          mountPath: /dev/dri
+        - name: 'render-device'
+          mountPath: '/dev/dri/renderD128'
 
 
       volumes:
@@ -73,7 +72,6 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: media-shared-pvc
-      - name: dev-dri
+      - name: 'render-device'
         hostPath:
-          path: /dev/dri
-          type: Directory
+          path: '/dev/dri/renderD128'
