@@ -50,8 +50,8 @@ spec:
           value: "1001"
         - name: TZ
           value: "Europe/Copenhagen"  # Set your timezone
-        - name: 
-          DOCKER_MODS: "linuxserver/mods:jellyfin-opencl-intel"
+        - name: DOCKER_MODS
+          value: "linuxserver/mods:jellyfin-opencl-intel"
 
         securityContext:
           privileged: true
