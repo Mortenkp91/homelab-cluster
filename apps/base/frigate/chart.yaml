@@ -33,6 +33,6 @@ spec:
           enabled: true
           ffmpeg:
             inputs:
-              - path: rtsp://root:2mNxviUytTynqHubFFRc@192.168.1.187/axis-media/media.amp?videocodec=h264&resolution=1920x1080 
+              - path: rtsp://root:2mNxviUytTynqHubFFRc@192.168.1.187/axis-media/media.amp?streamprofile=MaxProfile
                 roles:
                   - detect
