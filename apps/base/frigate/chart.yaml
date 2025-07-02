@@ -30,7 +30,7 @@ spec:
 
       cameras:
         carport: # <--- this will be changed to your actual camera later
-          enabled: False
+          enabled: true
           ffmpeg:
             inputs:
               - path: rtsp://root@2mNxviUytTynqHubFFRc192.168.1.187/axis-media/media.amp?adjustablelivestream=1
