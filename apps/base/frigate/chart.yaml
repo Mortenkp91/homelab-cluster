@@ -33,6 +33,6 @@ spec:
           enabled: true
           ffmpeg:
             inputs:
-              - path: rtsp://root@2mNxviUytTynqHubFFRc192.168.1.187/axis-media/media.amp?adjustablelivestream=1
+              - path: rtsp://192.168.1.187/axis-media/media.amp?adjustablelivestream=1
                 roles:
                   - detect
