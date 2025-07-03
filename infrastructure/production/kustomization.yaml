@@ -4,7 +4,7 @@ resources:
   - nfs
   - kubevip
   - kubevip-cloud-controller
-  # - traefik
+  - traefik
   # - cert-manager
   # - node-feature-discovery
   # - intel-device-operator
