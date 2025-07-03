@@ -5,7 +5,7 @@ resources:
   - kubevip
   - kubevip-cloud-controller
   - traefik
-  - external-secrets-operator
+  # - external-secrets-operator
   # - cert-manager
   # - node-feature-discovery
   # - intel-device-operator
