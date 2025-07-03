@@ -14,11 +14,14 @@ spec:
         name: traefik
         namespace: traefik
       interval: 10m
-  # values:
-  #   ports:
-  #     web:
-  #       redirections:
-  #         entryPoint:
-  #           to: websecure
-  #           scheme: https
-  #           permanent: true
+  values:
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
+
+    # ports:
+    #   web:
+    #     redirections:
+    #       entryPoint:
+    #         to: websecure
+    #         scheme: https
+    #         permanent: true
