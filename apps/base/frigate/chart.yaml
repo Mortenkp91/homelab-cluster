@@ -19,7 +19,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-        - host: frigate.mkped.local
+        - host: frigate.mkped.com
           paths:
             - path: '/'
               portName: http-auth
