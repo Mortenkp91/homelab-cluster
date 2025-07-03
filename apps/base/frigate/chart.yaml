@@ -19,7 +19,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-        - host: frigate.mkped.io
+        - host: frigate.mkped.local
           paths:
             - path: '/'
               portName: http-auth
@@ -29,7 +29,7 @@ spec:
         enabled: false
 
       cameras:
-        carport: # <--- this will be changed to your actual camera later
+        carport:
           enabled: true
           ffmpeg:
             inputs:
