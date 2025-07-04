@@ -18,10 +18,10 @@ spec:
     nodeSelector:
       node-role.kubernetes.io/master: "true"
 
-    # ports:
-    #   web:
-    #     redirections:
-    #       entryPoint:
-    #         to: websecure
-    #         scheme: https
-    #         permanent: true
+    ports:
+      web:
+        redirections:
+          entryPoint:
+            to: websecure
+            scheme: https
+            permanent: true
