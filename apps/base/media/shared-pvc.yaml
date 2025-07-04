@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: nfs-media
+  storageClassName: ""
   resources:
     requests:
       storage: 1.0Ti
