@@ -7,4 +7,5 @@ resources:
 - ./media/jellyfin
 - ./media/prowlarr
 - ./media/sonarr
+- ./media/radarr
 - frigate
