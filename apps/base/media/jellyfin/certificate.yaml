@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jellyfin-certificate
+  namespace: media
+spec:
+  secretName: jellyfin-certificate-secret
+  issuerRef:
+    name: cloudfare-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - jellyfin.mkped.com

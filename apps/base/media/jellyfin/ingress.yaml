@@ -17,3 +17,5 @@ spec:
                 name: jellyfin-svc
                 port:
                   number: 8096
+  tls:
+  - secretName: jellyfin-certificate-secret
