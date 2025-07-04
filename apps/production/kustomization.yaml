@@ -9,4 +9,4 @@ resources:
 - ./media/sonarr
 - ./media/radarr
 - ./media/jellyseer
-# - frigate
+- frigate
