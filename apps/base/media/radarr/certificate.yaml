@@ -4,7 +4,7 @@ metadata:
   name: radarr-certificate
   namespace: media
 spec:
-  secretName: sonarr-certificate-secret
+  secretName: radarr-certificate-secret
   issuerRef:
     name: cloudfare-clusterissuer
     kind: ClusterIssuer
