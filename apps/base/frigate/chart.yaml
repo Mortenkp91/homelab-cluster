@@ -16,7 +16,7 @@ spec:
       interval: 10m
   values:
 
-    resources: {}
+    resources:
       limits:
         cpu: 2000m
         memory: 1000Mi
