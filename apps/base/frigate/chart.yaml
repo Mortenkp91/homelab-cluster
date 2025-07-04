@@ -16,15 +16,15 @@ spec:
       interval: 10m
   values:
 
-    resources:
+    resources: {}
       limits:
-        memory: "2Gi"
-        cpu: "3000m"
-        gpu.intel.com/i915: "1"
+        cpu: 2000m
+        memory: 1000Mi
+        gpu.intel.com/i915: 1
       requests:
-        memory: "512Mi"
-        cpu: "600m"
-        gpu.intel.com/i915: "1"
+        cpu: 100m
+        memory: 128Mi
+        gpu.intel.com/i915: 1
 
     ingress:
       enabled: true
