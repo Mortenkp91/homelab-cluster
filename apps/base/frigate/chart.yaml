@@ -25,6 +25,8 @@ spec:
               portName: http-auth
     tls:
       - secretName: frigate-certificate-secret
+        hosts:
+          - frigate.mkped.com
 
     config: |
       mqtt:
