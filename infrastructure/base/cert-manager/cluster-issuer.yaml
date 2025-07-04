@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cloudfare-clusterissuer
+spec:
+  acme:
+    email: mortenkp1@gmail.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: cloudfare-clusterissuer-account-key
+    solvers:
+    - dns01:
+        cloudfare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: CLOUDFARE_API_TOKEN
