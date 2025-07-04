@@ -22,9 +22,9 @@ spec:
         - host: frigate.mkped.com
           paths:
             - path: '/'
-              portName: http-auth
-      tls:
-        - secretName: frigate-certificate-secret
+              portName: https-auth
+    tls:
+      - secretName: frigate-certificate-secret
 
     config: |
       mqtt:
