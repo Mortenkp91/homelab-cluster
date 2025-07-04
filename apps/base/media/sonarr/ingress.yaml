@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: sonarr-ingress
   namespace: media
-  # annotations:
-  #   traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
     - host: sonarr.mkped.com
