@@ -4,4 +4,4 @@ resources:
   - chart.yaml
   - namespace.yaml
   - repository.yaml
-  - feature-rules.yaml
+  # - feature-rules.yaml
