@@ -22,7 +22,7 @@ spec:
         - host: frigate.mkped.com
           paths:
             - path: '/'
-              portName: https-auth
+              portName: http-auth
     tls:
       - secretName: frigate-certificate-secret
 
