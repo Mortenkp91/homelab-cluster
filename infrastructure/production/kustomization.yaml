@@ -8,6 +8,6 @@ resources:
   - external-secrets-operator
   - cloudfared
   - cert-manager
-  # - node-feature-discovery
+  - node-feature-discovery
   # - intel-device-operator
   # - intel-device-plugins
