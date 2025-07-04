@@ -7,7 +7,7 @@ resources:
   - traefik
   - external-secrets-operator
   - cloudfared
-  # - cert-manager
+  - cert-manager
   # - node-feature-discovery
   # - intel-device-operator
   # - intel-device-plugins
