@@ -9,5 +9,5 @@ resources:
   - cloudfared
   - cert-manager
   - node-feature-discovery
-  # - intel-device-operator
+  - intel-device-operator
   # - intel-device-plugins
