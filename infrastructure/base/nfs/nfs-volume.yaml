@@ -90,18 +90,18 @@ spec:
     server: 10.20.22.81
     path: /srv/nfs/configs/radarr
 ---
-
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   name: pv-nfs-nvr
-# spec:
-#   capacity:
-#     storage: 500Gi
-#   accessModes:
-#     - ReadWriteOnce
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: nfs-nvr
-#   nfs:
-#     server: 192.168.1.224
-#     path: /srv/nfs/nvr
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-jellyseer-config
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/configs/jellyseer
+---
