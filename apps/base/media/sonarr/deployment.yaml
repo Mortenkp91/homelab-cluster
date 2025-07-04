@@ -38,7 +38,6 @@ spec:
         - name: tv
           mountPath: /media/tv
 
-
       volumes:
       - name: config
         persistentVolumeClaim:
