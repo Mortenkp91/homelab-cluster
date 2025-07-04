@@ -7,7 +7,7 @@ spec:
   selector:
     app: qbittorrent       
   ports:                      
-  - port: 80             
+  - port: 8080             
     targetPort: 8080      
     name: web-ui         
     protocol: TCP
