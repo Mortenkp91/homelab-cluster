@@ -44,6 +44,6 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: sonarr-config-pvc
-      - name: media
+      - name: tv
         persistentVolumeClaim:
           claimName: media-shared-pvc
