@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+        
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:5.26.2.10099-ls276
+
+        ports:
+        - containerPort: 7878
+          protocol: TCP
+
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "1001"
+        - name: TZ
+          value: "Europe/Copenhagen"
+
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: movies
+          mountPath: /media/movies
+
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-config-pvc
+      - name: movies
+        persistentVolumeClaim:
+          claimName: media-shared-pvc

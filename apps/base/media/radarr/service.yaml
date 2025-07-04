@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: radarr-svc            
+  namespace: media
+spec:
+  selector:
+    app: radarr       
+  ports:
+  - name: web
+    port: 7878
+    protocol: TCP
+    targetPort: 7878
+  type: ClusterIP
