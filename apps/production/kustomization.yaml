@@ -8,4 +8,5 @@ resources:
 - ./media/prowlarr
 - ./media/sonarr
 - ./media/radarr
+- ./media/jellyseer
 - frigate

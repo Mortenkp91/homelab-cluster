@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jellyseer-svc            
+  namespace: media
+spec:
+  selector:
+    app: jellyseer       
+  ports:
+  - name: web
+    port: 5055
+    protocol: TCP
+    targetPort: 5055
+  type: ClusterIP

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyseer-config-pvc
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: pv-nfs-jellyseer-config
+  resources:
+    requests:
+      storage: 1Gi
