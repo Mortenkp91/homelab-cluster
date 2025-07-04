@@ -29,6 +29,9 @@ spec:
           - frigate.mkped.com
 
     config: |
+      tls:
+        enabled: false
+
       mqtt:
         enabled: false
 
