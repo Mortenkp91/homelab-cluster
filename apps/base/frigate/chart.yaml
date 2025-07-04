@@ -33,6 +33,9 @@ spec:
       mqtt:
         enabled: false
 
+      ffmpeg:
+        hwaccel_args: preset-intel-qsv-h264
+
       cameras:
         carport:
           enabled: true

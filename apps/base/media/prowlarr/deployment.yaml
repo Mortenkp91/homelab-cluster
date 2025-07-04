@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+
+      restartPolicy: Always
+
+      containers:
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:1.37.0.5076-ls120
+
+        ports:
+        - containerPort: 9696
+          protocol: TCP
+
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "1001"
+        - name: TZ
+          value: "Europe/Copenhagen"
+
+        volumeMounts:
+        - name: config
+          mountPath: /config
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: prowlarr-config-pvc
