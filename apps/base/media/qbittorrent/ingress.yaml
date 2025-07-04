@@ -17,3 +17,5 @@ spec:
                 name: qbittorrent-tcp-svc
                 port:
                   number: 80
+  tls:
+  - secretName: qbittorrent-certificate-secret

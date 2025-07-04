@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: qbittorrent-certificate
+  namespace: media
+spec:
+  secretName: qbittorrent-certificate-secret
+  issuerRef:
+    name: cloudfare-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - qbittorrent.mkped.com

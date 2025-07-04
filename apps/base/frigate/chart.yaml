@@ -23,6 +23,8 @@ spec:
           paths:
             - path: '/'
               portName: http-auth
+      tls:
+        - secretName: frigate-certificate-secret
 
     config: |
       mqtt:
