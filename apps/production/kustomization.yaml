@@ -6,4 +6,5 @@ resources:
 - ./media/qbittorrent
 - ./media/jellyfin
 - ./media/prowlarr
+- ./media/sonarr
 - frigate

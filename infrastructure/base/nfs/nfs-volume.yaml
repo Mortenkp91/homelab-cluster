@@ -11,24 +11,9 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-media
   nfs:
-    server: 10.20.22.81 
+    server: 10.20.22.81
     path: /srv/nfs/media
 ---
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   name: pv-nfs-configs
-# spec:
-#   capacity:
-#     storage: 10Gi
-#   accessModes:
-#     - ReadWriteOnce
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: nfs-configs
-#   nfs:
-#     server: 192.168.1.224
-#     path: /srv/nfs/configs
-# ---
 
 apiVersion: v1
 kind: PersistentVolume
@@ -45,7 +30,6 @@ spec:
     server: 10.20.22.81
     path: /srv/nfs/configs/qbittorrent
 ---
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
