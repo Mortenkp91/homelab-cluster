@@ -16,6 +16,11 @@ spec:
     spec:
       restartPolicy: Always
 
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+
       containers:
       - name: jellyseer
         image: fallenbagel/jellyseerr:2.7.0
