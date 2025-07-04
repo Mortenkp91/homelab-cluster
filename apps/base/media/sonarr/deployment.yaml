@@ -37,7 +37,6 @@ spec:
           mountPath: /config
         - name: tv
           mountPath: /media/tv
-          readOnly: true
 
 
       volumes:
