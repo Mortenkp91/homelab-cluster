@@ -38,7 +38,6 @@ spec:
         - name: movies
           mountPath: /media/movies
 
-
       volumes:
       - name: config
         persistentVolumeClaim:
