@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-media
+  storageClassName: ""
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/media
@@ -40,7 +40,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-configs
+  storageClassName: ""
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/configs/jellyfin
@@ -55,7 +55,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-configs
+  storageClassName: ""
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/configs/prowlarr
@@ -70,7 +70,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-configs
+  storageClassName: ""
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/configs/sonarr
@@ -85,7 +85,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-configs
+  storageClassName: ""
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/configs/radarr

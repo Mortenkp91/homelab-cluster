@@ -6,7 +6,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: nfs-configs
+  storageClassName: ""
+  volumeName: pv-nfs-jellyfin-config
   resources:
     requests:
       storage: 1Gi
