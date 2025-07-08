@@ -105,3 +105,17 @@ spec:
     server: 10.20.22.81
     path: /srv/nfs/configs/jellyseer
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-nvr
+spec:
+  capacity:
+    storage: 250Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/nvr
