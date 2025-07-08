@@ -43,8 +43,8 @@ spec:
           paths:
             - path: '/'
               portName: http-auth
-    tls:
-      - secretName: frigate-certificate-secret
+      tls:
+        - secretName: frigate-certificate-secret
 
     config: |
       tls:
