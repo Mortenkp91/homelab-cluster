@@ -62,8 +62,6 @@ spec:
         - name: media
           mountPath: /media/movies
           readOnly: true
-        - mountPath: /dev/shm
-          name: dshm
         - name: media
           mountPath: /media/tv
           readOnly: true
@@ -81,7 +79,3 @@ spec:
       - name: 'render-device'
         hostPath:
           path: '/dev/dri/renderD128'
-      - name: dshm
-        emptyDir:
-          medium: Memory
-          sizeLimit: 128Mi
