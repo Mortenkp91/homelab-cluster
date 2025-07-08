@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: frigate-ingress
   namespace: frigate
-  # annotations:
-  #   traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
     - host: frigate.mkped.com
