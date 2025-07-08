@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frigate
+  namespace: frigate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frigate
+  template:
+    metadata:
+      labels:
+        app: frigate
+    spec:
+
+      nodeSelector:
+        node-role.kubernetes.io/master: "true" # master contains a 12th intel CPU with qsv support
+
+      containers:
+        - name: frigate
+          image: ghcr.io/blakeblackshear/frigate:0.15.1
+
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1000Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+          ports:
+            - containerPort: 5000
+              name: webui
+            - containerPort: 8080
+              name: web
+            - containerPort: 1984
+              name: go2rtc
+            - containerPort: 8554
+              name: rtsp-feeds
+            - containerPort: 8555
+              name: webrtc-tcp
+              protocol: TCP
+            - containerPort: 8555
+              name: webrtc-udp
+              protocol: UDP
+
+          volumeMounts:
+            - mountPath: /config
+              name: config
+              subPath: config
+            - mountPath: /media/frigate
+              name: media
+              subPath: media
+            # - mountPath: /dev/shm
+            #   name: dshm
+            - name: vaapi
+              mountPath: /dev/dri
+              readOnly: true
+
+          securityContext:
+            privileged: true
+
+          env:
+            - name: FRIGATE_RTSP_PASSWORD
+              value: "Hejhej1234"  # replace with your RTSP password
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: frigate-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: frigate-media-pvc
+        - name: vaapi
+          hostPath:
+            path: /dev/dri

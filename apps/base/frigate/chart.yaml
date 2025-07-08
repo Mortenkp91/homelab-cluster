@@ -20,6 +20,9 @@ spec:
       node-role.kubernetes.io/master: "true"
 
     extraVolumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: frigate-config-pvc
       - name: 'render-device'
         hostPath:
           path: '/dev/dri/renderD128'
@@ -27,6 +30,28 @@ spec:
     extraVolumeMounts:
       - name: 'render-device'
         mountPath: '/dev/dri/renderD128'
+
+
+            volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: media
+          mountPath: /media/movies
+          readOnly: true
+        - name: media
+          mountPath: /media/tv
+          readOnly: true
+        - name: 'render-device'
+          mountPath: '/dev/dri/renderD128'
+
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jellyfin-config-pvc
+      - name: media
+        persistentVolumeClaim:
+          claimName: media-shared-pvc
 
     resources:
       limits:
@@ -39,6 +64,9 @@ spec:
     securityContext:
       privileged: true
 
+    persistence:
+      persistence.config.enabled: true
+
     ingress:
       enabled: true
       hosts:
@@ -48,7 +76,6 @@ spec:
               portName: http-auth
       tls:
         - secretName: frigate-certificate-secret
-
     config: |
       tls:
         enabled: false
@@ -65,3 +92,4 @@ spec:
               - path: rtsp://root:2mNxviUytTynqHubFFRc@192.168.1.187/axis-media/media.amp?streamprofile=MaxProfile
                 roles:
                   - detect
+              
