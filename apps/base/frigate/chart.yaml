@@ -22,11 +22,11 @@ spec:
     extraVolumes:
       - name: 'render-device'
         hostPath:
-          path: '/dev/dri'
+          path: '/dev/dri/renderD128'
 
     extraVolumeMounts:
       - name: 'render-device'
-        mountPath: '/dev/dri'
+        mountPath: '/dev/dri/renderD128'
 
     resources:
       limits:
@@ -53,13 +53,11 @@ spec:
       mqtt:
         enabled: false
 
-      ffmpeg:
-        hwaccel_args: preset-intel-qsv-h264
-
       cameras:
         carport:
           enabled: true
           ffmpeg:
+            hwaccel_args: preset-vaapi
             inputs:
               - path: rtsp://root:2mNxviUytTynqHubFFRc@192.168.1.187/axis-media/media.amp?streamprofile=MaxProfile
                 roles:
