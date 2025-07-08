@@ -19,15 +19,22 @@ spec:
     nodeSelector:
       node-role.kubernetes.io/master: "true"
 
+    extraVolumes:
+      - name: 'render-device'
+        hostPath:
+          path: '/dev/dri/renderD128'
+
+    extraVolumeMounts:
+      - name: 'render-device'
+        mountPath: '/dev/dri/renderD128'
+
     resources:
       limits:
         cpu: 2000m
         memory: 1000Mi
-        # gpu.intel.com/i915: 1
       requests:
         cpu: 100m
         memory: 128Mi
-        # gpu.intel.com/i915: 1
 
     ingress:
       enabled: true
