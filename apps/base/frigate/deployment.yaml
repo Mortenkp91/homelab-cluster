@@ -22,12 +22,12 @@ spec:
           image: ghcr.io/blakeblackshear/frigate:0.15.1
 
           resources:
-            limits:
-              cpu: 2000m
-              memory: 1000Mi
             requests:
-              cpu: 100m
-              memory: 128Mi
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "3096Mi"
+              cpu: "4"
 
           ports:
             - containerPort: 5000
