@@ -22,11 +22,11 @@ spec:
     extraVolumes:
       - name: 'render-device'
         hostPath:
-          path: '/dev/dri/renderD128'
+          path: '/dev/dri'
 
     extraVolumeMounts:
       - name: 'render-device'
-        mountPath: '/dev/dri/renderD128'
+        mountPath: '/dev/dri'
 
     resources:
       limits:
