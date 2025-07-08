@@ -64,6 +64,7 @@ spec:
           env:
             - name: FRIGATE_RTSP_PASSWORD
               value: "Hejhej1234"  # replace with your RTSP password
+              
       volumes:
         - name: config
           persistentVolumeClaim:
