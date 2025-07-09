@@ -7,4 +7,4 @@ resources:
   - traefik
   - external-secrets-operator
   - cert-manager
-  # - monitoring
+  - monitoring
