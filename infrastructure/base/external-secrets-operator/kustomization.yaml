@@ -5,4 +5,3 @@ resources:
   - repositories.yaml
   - deployment-crds.yaml
   - chart.yaml
-  # - azkv-secret-store.yaml
