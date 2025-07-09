@@ -18,6 +18,7 @@ alertmanager:
 
 prometheus:
   ingress:
+    enabled: true
     hosts:
       - host: prometheus.mkped.com
         paths:
@@ -27,7 +28,7 @@ prometheus:
               service:
                 name: prometheus-stack-kube-prom-prometheus
                 port:
-                  number: 80
+                  number: 9090
     tls:
       - secretName: prometheus-certificate-secret
         hosts:
@@ -46,6 +47,7 @@ prometheus:
 
 grafana:
   ingress:
+    enabled: true
     hosts:
       - host: grafana.mkped.com
         paths:
