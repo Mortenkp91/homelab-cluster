@@ -11,3 +11,6 @@ configMapGenerator:
   - name: kube-prometheus-stack-values
     files:
       - values.yaml=values.yaml
+      
+configurations:
+  - kustomizeconfig.yaml
