@@ -20,15 +20,8 @@ prometheus:
   ingress:
     enabled: true
     hosts:
-      - host: prometheus.mkped.com
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: prometheus-stack-kube-prom-prometheus
-                port:
-                  number: 9090
+      - prometheus.mkped.com
+
     tls:
       - secretName: prometheus-certificate-secret
         hosts:
@@ -49,15 +42,8 @@ grafana:
   ingress:
     enabled: true
     hosts:
-      - host: grafana.mkped.com
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: prometheus-stack-kube-prom-grafana
-                port:
-                  number: 80
+      - grafana.mkped.com
+    
     tls:
       - secretName: grafana-certificate-secret
         hosts:
