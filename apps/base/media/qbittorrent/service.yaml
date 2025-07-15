@@ -11,10 +11,6 @@ spec:
     targetPort: 8080      
     name: web-ui         
     protocol: TCP
-  - port: 6881
-    targetPort: 6881
-    name: torrent-tcp
-    protocol: TCP  
   type: ClusterIP
 ---
 kind: Service
@@ -30,4 +26,8 @@ spec:
     targetPort: 6881        
     name: torrent-udp         
     protocol: UDP
-  type: ClusterIP
+  - port: 6881
+    targetPort: 6881
+    name: torrent-tcp
+    protocol: TCP  
+  type: NodePort # for port-fowarding
