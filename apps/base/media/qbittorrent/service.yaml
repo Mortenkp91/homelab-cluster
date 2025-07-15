@@ -30,4 +30,4 @@ spec:
     targetPort: 6881
     name: torrent-tcp
     protocol: TCP  
-  type: NodePort # for port-fowarding
+  type: LoadBalancer # for port-fowarding
