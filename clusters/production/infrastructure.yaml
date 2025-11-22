@@ -22,7 +22,7 @@ metadata:
 spec:
   dependsOn:
     - name: infra-resources
-  interval: 1h
+  interval: 1m
   retryInterval: 1m
   timeout: 5m
   sourceRef:
