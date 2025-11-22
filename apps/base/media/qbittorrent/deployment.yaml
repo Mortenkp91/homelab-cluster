@@ -16,7 +16,7 @@ spec:
       restartPolicy: Always
 
 
-# linuxserver.io images requires root :()
+# linuxserver.io images requires root :(
       # securityContext:
       #   runAsNonRoot: true
       #   runAsUser: 1001
