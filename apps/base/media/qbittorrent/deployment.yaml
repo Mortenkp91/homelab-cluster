@@ -25,7 +25,7 @@ spec:
 
       containers:
         - name: qbittorrent
-          image: ghcr.io/linuxserver/qbittorrent:5.1.2
+          image: ghcr.io/linuxserver/qbittorrent:20.04.1
           imagePullPolicy: IfNotPresent
 
           resources:
