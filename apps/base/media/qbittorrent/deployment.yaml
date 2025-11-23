@@ -16,7 +16,7 @@ spec:
       restartPolicy: Always
       
       securityContext:
-        runAsNonRoot: true
+        runAsNonRoot: false
         runAsUser: 1001
         runAsGroup: 1001
 
