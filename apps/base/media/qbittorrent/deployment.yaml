@@ -16,7 +16,7 @@ spec:
       restartPolicy: Always
       
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: trye
         runAsUser: 1001
         runAsGroup: 1001
 
@@ -25,7 +25,7 @@ spec:
 
       containers:
         - name: qbittorrent
-          image: ghcr.io/linuxserver/qbittorrent:5.1.4
+          image: ghcr.io/linuxserver/qbittorrent:5.1.2
           imagePullPolicy: IfNotPresent
 
           resources:
