@@ -1,8 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: intel-device-plugins
-  namespace: intel-device-plugins
-spec:
-  interval: 1m0s
-  url: https://intel.github.io/helm-charts/
