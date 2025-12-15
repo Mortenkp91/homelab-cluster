@@ -11,3 +11,4 @@ spec:
     path: /mnt/loki
     type: DirectoryOrCreate
   storageClassName: local-loki
+  persistentVolumeReclaimPolicy: Recycle

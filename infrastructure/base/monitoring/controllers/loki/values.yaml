@@ -1,7 +1,10 @@
 loki:
   auth_enabled: false
   storage:
+    # Use local filesystem as the storage backend
     type: filesystem
+    object_store:
+      type: filesystem
   rulerConfig:
     storage:
       type: local
