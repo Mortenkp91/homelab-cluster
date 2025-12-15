@@ -1,5 +1,0 @@
-promtail:
-  enabled: false
-
-grafana:
-  enabled: false
