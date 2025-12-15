@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: alloy
-  namespace: alloy
+  namespace: monitoring
 spec:
   interval: 30m
   chart:
@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: grafana
-        namespace: alloy
+        namespace: monitoring
       interval: 12h
 
   valuesFrom:

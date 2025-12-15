@@ -1,9 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: alloy
 resources:
-  - namespace.yaml
-  - repository.yaml
   - chart.yaml
 
 configMapGenerator:
@@ -14,5 +11,5 @@ configMapGenerator:
     files:
       - config.alloy=config.alloy
     options:
-      disableNameSuffixHash: true
+      disableNameSuffixHash: true # prevent adding a hash to the configmap name on each deployment causing re-deployments
 
