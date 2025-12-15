@@ -26,3 +26,8 @@ serviceAccount:
 rbac:
   create: true
 
+mounts:
+  varlog: true            # Grants Alloy access to pod logs on the node
+controller:
+  type: 'daemonset'       # Alloy runs on every node to collect local pod logs
+
