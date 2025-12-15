@@ -7,7 +7,7 @@ loki:
       type: local
 
   commonConfig:
-    replication_factor: 3
+    replication_factor: 1
   schemaConfig:
     configs:
       - from: "2024-04-01"
@@ -31,7 +31,7 @@ minio:
 deploymentMode: SingleBinary
 
 singleBinary:
-  replicas: 3
+  replicas: 1
   persistence:
     storageClass: local-loki
     enabled: true
