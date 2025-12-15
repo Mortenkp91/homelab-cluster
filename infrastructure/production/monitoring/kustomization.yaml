@@ -5,4 +5,4 @@ resources:
   - ../../base/monitoring/repository.yaml
   - ../../base/monitoring/controllers/kube-prometheus-stack
   - ../../base/monitoring/controllers/alloy
-  - ../../base/monitoring/controllers/loki-stack
+#  - ../../base/monitoring/controllers/loki-stack
