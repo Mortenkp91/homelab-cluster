@@ -4,6 +4,17 @@
 # Loki configuration
 loki:
   auth_enabled: false
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
   
   # Storage configuration
   storage:

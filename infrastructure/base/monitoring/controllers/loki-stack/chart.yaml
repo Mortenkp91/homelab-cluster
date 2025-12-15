@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: grafana
-        namespace: loki
+        namespace: monitoring
       interval: 12h
 
   valuesFrom:
