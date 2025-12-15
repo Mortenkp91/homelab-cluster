@@ -13,7 +13,7 @@ spec:
         kind: HelmRepository
         name: grafana
         namespace: monitoring
-      interval: 1m
+      interval: 24h
 
   valuesFrom:
     - kind: ConfigMap
