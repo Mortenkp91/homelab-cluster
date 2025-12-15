@@ -49,25 +49,6 @@ grafana:
         hosts:
           - grafana.mkped.com
 
-  grafana.ini:
-    date_formats:
-      default_week_start: monday
-
-  # envFromSecret: grafana-env
-
-  sidecar:
-    datasources:
-      enabled: true
-      label: grafana_datasource
-      labelValue: "1"
-    dashboards:
-      enabled: true
-      label: grafana_dashboard
-      labelValue: "1"
-      searchNamespace: monitoring
-      provider:
-        allowUiUpdates: true
-
   # persistence:
   #   enabled: true
   #   type: pvc
