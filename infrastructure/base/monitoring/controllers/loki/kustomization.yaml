@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - chart.yaml
+  - pv.yaml
 
 configMapGenerator:
   - name: loki-values
