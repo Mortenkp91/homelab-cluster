@@ -4,8 +4,8 @@ namespace: monitoring
 resources:
   - chart.yaml
 
-#configMapGenerator:
-#  - name: loki-values
-#    files:
-#      - values.yaml=values.yaml
+configMapGenerator:
+  - name: loki-values
+    files:
+      - values.yaml=values.yaml
 
