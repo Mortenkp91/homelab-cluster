@@ -1,0 +1,28 @@
+# Grafana Alloy Helm chart values
+# See https://github.com/grafana/alloy/blob/main/operations/helm/charts/alloy/values.yaml for all options
+
+# Reference the ConfigMap containing the Alloy configuration
+configMap:
+  name: alloy-config
+  key: config.alloy
+
+# Deployment configuration
+replicas: 1
+
+# Resource limits
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Service account
+serviceAccount:
+  create: true
+
+# RBAC
+rbac:
+  create: true
+

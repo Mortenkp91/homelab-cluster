@@ -1,0 +1,12 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+# Forward metrics to Prometheus
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
+  }
+}
+
