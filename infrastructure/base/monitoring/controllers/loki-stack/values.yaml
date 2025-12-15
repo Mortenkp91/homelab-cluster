@@ -4,7 +4,6 @@
 # Loki configuration
 loki:
   auth_enabled: false
-
   readinessProbe:
     httpGet:
       path: /ready
@@ -78,3 +77,9 @@ resources:
     cpu: 500m
     memory: 1Gi
 
+
+promtail:
+  enabled: false
+
+grafana:
+  enabled: false
