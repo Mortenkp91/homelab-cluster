@@ -3,12 +3,6 @@ logging {
   format = "logfmt"
 }
 
-loki.write "loki" {
-  endpoint {
-      url = "http://loki-gateway/loki/api/v1/push"      
-  }
-}
-
 // discovery.kubernetes allows you to find scrape targets from Kubernetes resources.
 // It watches cluster state and ensures targets are continually synced with what is currently running in your cluster.
 discovery.kubernetes "pod" {
@@ -99,4 +93,10 @@ loki.process "pod_logs" {
   }
 
   forward_to = [loki.write.loki.receiver]
+}
+
+loki.write "loki" {
+  endpoint {
+      url = "http://loki-gateway/loki/api/v1/push"      
+  }
 }
