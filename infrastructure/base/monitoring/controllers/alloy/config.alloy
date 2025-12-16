@@ -92,7 +92,7 @@ loki.process "pod_logs" {
       }
   }
 
-  forward_to = [loki.write.<WRITE_COMPONENT_NAME>.receiver]
+  forward_to = [loki.write.loki.receiver]
 }
 
 local.file_match "node_logs" {
