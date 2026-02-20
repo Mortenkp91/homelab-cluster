@@ -7,4 +7,5 @@ resources:
   - traefik
   - external-secrets-operator
   - cert-manager
+  - external-dns
   - monitoring
