@@ -25,7 +25,7 @@ spec:
       # Keeps data on the NFS server when a PVC is deleted (renames with "archived-" prefix)
       archiveOnDelete: "true"
       # Subdirectory naming pattern: <namespace>/<pvc-name>
-      pathPattern: "${.PVC.namespace}/${.PVC.annotations.nfs\\.io/storage-path:${.PVC.name}}"
+      pathPattern: "${.PVC.namespace}/${.PVC.name}"
 
     resources:
       requests:
