@@ -134,3 +134,18 @@ spec:
   nfs:
     server: 10.20.22.81
     path: /srv/nfs/configs/frigate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-homeassistant-config
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: 10.20.22.81
+    path: /srv/nfs/configs/homeassistant

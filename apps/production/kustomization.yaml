@@ -10,3 +10,4 @@ resources:
 - ./media/radarr
 - ./media/jellyseer
 - frigate
+- homeassistant
