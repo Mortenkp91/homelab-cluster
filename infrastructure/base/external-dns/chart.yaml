@@ -30,6 +30,10 @@ spec:
       - ingress
     txtOwnerId: homelab
     interval: 1m
+    # Force all DNS records to point to the Traefik LoadBalancer IP,
+    # ignoring whatever IPs are in the Ingress status
+    extraArgs:
+      - --default-targets=10.20.22.11
 
     resources:
       requests:
