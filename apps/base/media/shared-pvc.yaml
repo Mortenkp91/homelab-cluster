@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: ""
-  volumeName: pv-nfs-media
+  volumeName: pv-local-media
   resources:
     requests:
       storage: 1.0Ti
