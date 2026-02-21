@@ -16,6 +16,9 @@ spec:
     spec:
       restartPolicy: Always
 
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
+
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001

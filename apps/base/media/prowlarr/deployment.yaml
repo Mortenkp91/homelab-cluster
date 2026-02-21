@@ -16,6 +16,9 @@ spec:
     spec:
       restartPolicy: Always
 
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
+
       containers:
       - name: prowlarr
         image: lscr.io/linuxserver/prowlarr:1.37.0.5076-ls120
