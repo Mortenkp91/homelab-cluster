@@ -32,6 +32,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -47,6 +51,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -62,6 +70,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -77,6 +89,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -92,6 +108,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -107,6 +127,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -122,6 +146,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
@@ -137,6 +165,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - soft
+    - timeo=30
+    - retrans=3
   storageClassName: ""
   nfs:
     server: 10.20.22.81
