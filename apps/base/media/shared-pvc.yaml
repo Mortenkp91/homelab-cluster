@@ -5,7 +5,7 @@ metadata:
   namespace: media
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: ""
   volumeName: pv-nfs-media
   resources:
