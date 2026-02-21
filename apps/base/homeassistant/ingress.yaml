@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: homeassistant-ingress
   namespace: homeassistant
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
     - host: homeassistant.mkped.com
