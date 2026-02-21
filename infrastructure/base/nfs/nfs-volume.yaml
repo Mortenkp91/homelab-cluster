@@ -10,9 +10,16 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/media
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 
 apiVersion: v1

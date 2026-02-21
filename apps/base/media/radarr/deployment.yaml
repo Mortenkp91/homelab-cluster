@@ -16,6 +16,9 @@ spec:
     spec:
       restartPolicy: Always
 
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+
       containers:
       - name: radarr
         image: lscr.io/linuxserver/radarr:5.26.2.10099-ls276
