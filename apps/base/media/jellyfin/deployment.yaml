@@ -61,9 +61,6 @@ spec:
           mountPath: /media/movies
           readOnly: true
         - name: media
-          mountPath: /media/
-          readOnly: true
-        - name: media
           mountPath: /media/tv
           readOnly: true
         - name: 'render-device'
