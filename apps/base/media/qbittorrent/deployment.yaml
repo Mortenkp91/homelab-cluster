@@ -15,6 +15,11 @@ spec:
     spec:
       restartPolicy: Always
 
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+
       nodeSelector:
         node-role.kubernetes.io/master: "true"
 
