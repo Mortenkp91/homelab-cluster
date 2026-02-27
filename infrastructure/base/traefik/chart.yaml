@@ -26,8 +26,6 @@ spec:
         cpu: "500m"
         memory: "256Mi"
 
-    api:
-      insecure: true
     providers:
       kubernetesGateway:
         enabled: true
