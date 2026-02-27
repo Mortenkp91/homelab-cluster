@@ -5,6 +5,8 @@ metadata:
   namespace: traefik
 spec:
   interval: 10m
+  upgrade:
+    force: true
   chart:
     spec:
       chart: traefik
