@@ -4,6 +4,9 @@ metadata:
   name: traefik
   namespace: traefik
 spec:
+  dependsOn:
+    - name: gateway-api
+      namespace: gateway-system
   interval: 10m
   chart:
     spec:
@@ -26,6 +29,11 @@ spec:
         cpu: "500m"
         memory: "256Mi"
 
+    providers:
+      kubernetesGateway:
+        enabled: true
+    gateway:
+      enabled: false
     ports:
       web:
         redirections:

@@ -5,6 +5,7 @@ resources:
   - nfs-subdir-provisioner
   - kubevip
   - kubevip-cloud-controller
+  - gateway-api
   - traefik
   - external-secrets-operator
   - cert-manager

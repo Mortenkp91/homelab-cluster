@@ -27,7 +27,7 @@ spec:
 
     policy: upsert-only
     sources:
-      - ingress
+      - gateway-httproute
     txtOwnerId: homelab
     interval: 1m
     # Force all DNS records to point to the Traefik LoadBalancer IP,
