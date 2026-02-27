@@ -41,4 +41,5 @@ spec:
               permanent: true
       websecure:
         http:
-          tls: false
+          tls:
+            enabled: false
