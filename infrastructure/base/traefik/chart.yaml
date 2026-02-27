@@ -4,9 +4,6 @@ metadata:
   name: traefik
   namespace: traefik
 spec:
-  dependsOn:
-    - name: gateway-api
-      namespace: gateway-system
   interval: 10m
   chart:
     spec:
