@@ -67,7 +67,6 @@ spec:
               name: dshm
             - name: vaapi
               mountPath: /dev/dri
-              readOnly: true
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
