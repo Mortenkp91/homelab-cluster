@@ -26,8 +26,8 @@ spec:
               memory: "256Mi"
               cpu: "500m"
             limits:
-              memory: "3096Mi"
-              cpu: "4"
+              memory: "2048Mi"
+              cpu: "2"
 
           ports:
             - containerPort: 5000
@@ -62,6 +62,10 @@ spec:
             runAsNonRoot: true
             runAsUser: 1001
             runAsGroup: 1001
+            capabilities:
+              add:
+                - CHOWN
+                - DAC_OVERRIDE
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
