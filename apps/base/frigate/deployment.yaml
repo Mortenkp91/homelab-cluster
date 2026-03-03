@@ -13,33 +13,20 @@ spec:
       labels:
         app: frigate
     spec:
-      securityContext:
-        supplementalGroups: [992, 44]
-
       nodeSelector:
-        node-role.kubernetes.io/master: "true" # master contains a 12th intel CPU with qsv support
-
+        node-role.kubernetes.io/master: "true"
       containers:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:0.16.4
-          
           securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
-            runAsGroup: 0
-            capabilities:
-              add:
-                - CHOWN
-                - DAC_OVERRIDE
-                
+            privileged: true
           resources:
             requests:
               memory: "256Mi"
               cpu: "500m"
             limits:
-              memory: "2048Mi"
-              cpu: "2"
-
+              memory: "3072Mi"
+              cpu: "4"
           ports:
             - containerPort: 5000
               name: webui
@@ -55,7 +42,9 @@ spec:
             - containerPort: 8555
               name: webrtc-udp
               protocol: UDP
-
+          env:
+            - name: FRIGATE_RTSP_PASSWORD
+              value: "Hejhej1234"
           volumeMounts:
             - mountPath: /config
               name: config
@@ -67,11 +56,6 @@ spec:
               name: dshm
             - name: vaapi
               mountPath: /dev/dri
-
-          env:
-            - name: FRIGATE_RTSP_PASSWORD
-              value: "Hejhej1234"  # replace with your RTSP password
-              
       volumes:
         - name: config
           persistentVolumeClaim:
