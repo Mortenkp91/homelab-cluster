@@ -20,7 +20,16 @@ spec:
       containers:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:0.16.4
-
+          
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+            capabilities:
+              add:
+                - CHOWN
+                - DAC_OVERRIDE
+                
           resources:
             requests:
               memory: "256Mi"
@@ -59,13 +68,7 @@ spec:
               readOnly: true
 
           securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
-            runAsGroup: 0
-            capabilities:
-              add:
-                - CHOWN
-                - DAC_OVERRIDE
+           supplementalGroups: [992, 44]
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
