@@ -68,7 +68,7 @@ spec:
               readOnly: true
 
           securityContext:
-           supplementalGroups: [992, 44]
+            supplementalGroups: [992, 44]
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
