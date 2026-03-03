@@ -13,6 +13,8 @@ spec:
       labels:
         app: frigate
     spec:
+      securityContext:
+        supplementalGroups: [992, 44]
 
       nodeSelector:
         node-role.kubernetes.io/master: "true" # master contains a 12th intel CPU with qsv support
@@ -66,9 +68,6 @@ spec:
             - name: vaapi
               mountPath: /dev/dri
               readOnly: true
-
-          securityContext:
-            supplementalGroups: [992, 44]
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
