@@ -59,7 +59,9 @@ spec:
               readOnly: true
 
           securityContext:
-            privileged: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
 
           env:
             - name: FRIGATE_RTSP_PASSWORD
