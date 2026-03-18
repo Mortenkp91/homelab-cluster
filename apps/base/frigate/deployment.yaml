@@ -22,10 +22,10 @@ spec:
             privileged: true
           resources:
             requests:
-              memory: "256Mi"
+              memory: "512Mi"
               cpu: "500m"
             limits:
-              memory: "2048Mi"
+              memory: "4Gi"
               cpu: "2"
           ports:
             - containerPort: 5000
@@ -69,4 +69,4 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-            sizeLimit: 256Mi
+            sizeLimit: 1Gi
