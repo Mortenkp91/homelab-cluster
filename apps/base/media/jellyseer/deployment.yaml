@@ -21,12 +21,12 @@ spec:
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1001
-        runAsGroup: 1001
+        runAsUser: 1000
+        runAsGroup: 1000
 
       containers:
       - name: jellyseer
-        image: fallenbagel/jellyseerr:2.7.3
+        image: seerr/seerr:3.1.0
 
         ports:
         - containerPort: 5055
@@ -34,9 +34,9 @@ spec:
 
         env:
         - name: PUID
-          value: "1001"
+          value: "1000"
         - name: PGID
-          value: "1001"
+          value: "1000"
         - name: TZ
           value: "Europe/Copenhagen"
 
