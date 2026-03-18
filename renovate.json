@@ -8,5 +8,11 @@
   },
   "flux": {
     "fileMatch": ["\\.yaml$"]
-  }
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": ["/^(gh|ls)cr\\.io\\/linuxserver\\//"],
+      "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)((\\.|-r)(?<build>\\d+))?-ls(?<revision>\\d+)$"
+    }
+  ]
 }
