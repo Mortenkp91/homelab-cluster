@@ -26,7 +26,7 @@ spec:
 
       containers:
       - name: jellyseer
-        image: seerr/seerr:3.1.0
+        image: ghcr.io/seerr-team/seerr:3.1.0
 
         ports:
         - containerPort: 5055
