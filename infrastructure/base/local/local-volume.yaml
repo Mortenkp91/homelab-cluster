@@ -76,14 +76,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
-    path: /srv/nfs/configs/prowlarr
+  local:
+    path: /var/lib/k8s-local/prowlarr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-002
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -139,14 +142,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
-    path: /srv/nfs/configs/jellyseer
+  local:
+    path: /var/lib/k8s-local/jellyseer
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-002
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -191,3 +197,25 @@ spec:
           operator: In
           values:
           - mpe-001
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-local-homeassistant-config
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  local:
+    path: /var/lib/k8s-local/homeassistant
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-002

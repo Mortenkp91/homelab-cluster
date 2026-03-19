@@ -6,7 +6,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: nfs-client
+  storageClassName: ""
+  volumeName: pv-local-homeassistant-config
   resources:
     requests:
       storage: 5Gi
