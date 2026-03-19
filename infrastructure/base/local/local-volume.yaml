@@ -1,4 +1,4 @@
-# nfs-persistent-volumes.yaml
+# local-persistent-volumes.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-qbittorrent-config
+  name: pv-local-qbittorrent-config
 spec:
   capacity:
     storage: 1Gi
@@ -47,7 +47,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-jellyfin-config
+  name: pv-local-jellyfin-config
 spec:
   capacity:
     storage: 1Gi
@@ -69,7 +69,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-prowlarr-config
+  name: pv-local-prowlarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -88,7 +88,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-sonarr-config
+  name: pv-local-sonarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -110,7 +110,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-radarr-config
+  name: pv-local-radarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -132,7 +132,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-jellyseer-config
+  name: pv-local-jellyseer-config
 spec:
   capacity:
     storage: 1Gi
@@ -151,7 +151,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-nvr
+  name: pv-local-nvr
 spec:
   capacity:
     storage: 250Gi
@@ -173,7 +173,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv-nfs-nvr-config
+  name: pv-local-nvr-config
 spec:
   capacity:
     storage: 1Gi

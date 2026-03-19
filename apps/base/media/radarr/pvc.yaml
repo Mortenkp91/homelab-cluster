@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: pv-nfs-radarr-config
+  volumeName: pv-local-radarr-config
   resources:
     requests:
       storage: 1Gi
