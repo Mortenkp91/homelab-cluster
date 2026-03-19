@@ -32,14 +32,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/configs/qbittorrent
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -51,14 +54,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/configs/jellyfin
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -89,14 +95,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/configs/sonarr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -108,14 +117,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/configs/radarr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -146,14 +158,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/nvr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -165,11 +180,14 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - soft
-    - timeo=30
-    - retrans=3
   storageClassName: ""
-  nfs:
-    server: 10.20.22.81
+  local:
     path: /srv/nfs/configs/frigate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - mpe-001
