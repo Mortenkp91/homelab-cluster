@@ -17,7 +17,7 @@ spec:
       restartPolicy: Always
 
       nodeSelector:
-        node-role.kubernetes.io/master: "true"
+        node-role.kubernetes.io/control-plane: "true"
 
       containers:
       - name: radarr

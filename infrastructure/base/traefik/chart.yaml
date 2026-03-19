@@ -16,7 +16,7 @@ spec:
       interval: 10m
   values:
     nodeSelector:
-      node-role.kubernetes.io/master: "true"
+      node-role.kubernetes.io/control-plane: "true"
 
     resources:
       requests:
