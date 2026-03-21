@@ -16,6 +16,8 @@ spec:
       interval: 10m
   values:
     service:
+      annotations:
+        kube-vip.io/loadbalancerIPs: "10.20.22.11"
       spec:
         loadBalancerIP: "10.20.22.11"
 
