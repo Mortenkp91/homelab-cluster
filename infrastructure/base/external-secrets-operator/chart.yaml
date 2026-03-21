@@ -18,5 +18,12 @@ spec:
   values:
     installCRDs: true
 
+  storageNamespace: external-secrets
   install:
-    createNamespace: true
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m

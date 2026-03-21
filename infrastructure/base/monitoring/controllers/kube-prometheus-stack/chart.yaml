@@ -20,8 +20,14 @@ spec:
 
   install:
     crds: Create
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
   upgrade:
     crds: CreateReplace
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
   driftDetection:
     mode: enabled
     ignore:

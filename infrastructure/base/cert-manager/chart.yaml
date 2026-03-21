@@ -4,6 +4,15 @@ metadata:
   name: cert-manager
   namespace: cert-manager
 spec:
+  install:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  storageNamespace: cert-manager
   chart:
     spec:
       chart: cert-manager
