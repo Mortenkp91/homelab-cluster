@@ -19,7 +19,7 @@ spec:
             - name: ghcr-credentials
           containers:
             - name: automatic-parking-registration
-              image: ghcr.io/mortenkp91/automatic-parking-registration:v1.0.1
+              image: ghcr.io/mortenkp91/automatic-parking-registration:v1.1.0
               imagePullPolicy: IfNotPresent
               env:
                 - name: LICENSE_PLATE
