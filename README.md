@@ -67,5 +67,5 @@ Here's a list of different application that I run my homelab
 | **[Jellyfin](https://jellyfin.org/)** | Media Streaming Server. Better than Plex IMO |
 | **[Jellyseer](https://seerr.dev)** | A nice GUI for requesting new cat content with automatic integration to Radarr, Sonarr and Prowlarr |
 | **[Home Assistant](https://www.home-assistant.io/)** | Open source home automation platform for controlling and automating smart home devices |
-| **Automatic Parking Registration** | Never getting a parking ticket again! Small app that registers parking for me. Hosted as a CronJob |
+| **Automatic Parking Registration** | Never getting a parking ticket again! Small app that registers parking for me. Hosted as a CronJob and runs on weekdays at 07:30. |
 
