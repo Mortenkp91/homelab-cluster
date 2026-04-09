@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: automatic-parking-registration
+  namespace: automatic-parking-registration
+spec:
+  schedule: "30 7 * * 1-5"
+  timeZone: Europe/Copenhagen
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: automatic-parking-registration
+              image: ghcr.io/mortenkp91/automatic-parking-registration:v0.1.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: LICENSE_PLATE
+                  valueFrom:
+                    secretKeyRef:
+                      name: license-plate
+                      key: LICENSE_PLATE
+                - name: PHONE_NUMBER
+                  valueFrom:
+                    secretKeyRef:
+                      name: phone-number
+                      key: PHONE_NUMBER
