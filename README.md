@@ -43,11 +43,13 @@ Here's all the components I used to run my homelab
 |------|-------------|
 | **[Flux CD](https://fluxcd.io/)** | My GitOps solution of choice. The core functionality that allows for simple and iterative changes to my cluster. Using GitOps, I've my desired state stored in Git and I dont need to think about backing up the current state |
 | **[Cert Manager](https://cert-manager.io/)** | X.509 certificate management for Kubernetes. I'm using Let's Encrypted as a provider for getting free TLS certs on my apps. |
-| **[Cloudflare](https://www.cloudflare.com/)** | DNS Management. Planning on getting ``external-dns`` installed as well to automatically sync my Ingress DNS records to Cloudfare. |
+| **[Cloudflare](https://www.cloudflare.com/)** | DNS Management. Used together with ``external-dns`` to automatically sync Ingress DNS records to Cloudflare. |
+| **[External DNS](https://github.com/kubernetes-sigs/external-dns)** | Automatically synchronizes Kubernetes Ingress and Service resources to Cloudflare DNS records. |
 | **[External Secrets Operator](https://external-secrets.io/)** | Syncs my secrets stored in Azure Key Vault to my cluster. |
 | **[Traefik](https://traefik.io/)** | My Ingress Controller of choice. Natively supports Ingress and the new Gateway API |
 | **[Grafana](https://grafana.com/)** | The best in class open source observability platform. Why use something else? |
 | **[Prometheus](https://prometheus.io/)** | Open sourced pull based monitoring system |
+| **[NFS Subdir Provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)** | Dynamic NFS subdirectory provisioner for automatic PersistentVolume creation backed by the NFS server on the master node |
 | **[Renovate](https://www.mend.io/renovate/)** | Automated dependency updates. Currently installed as a GitHub Bot in my repository. I could host it my self, but the freely managed GitHub Bot works just fine! |
 | **[kubevip and kubevip-cloud-controller](https://kube-vip.io//)** | LoadBalancer IP assigment for bare metal setups. Whenever a new type of ``Service:LoadBalancer`` appears it assigns an IP address from a pre-configured IP range. This is configured in the VLAN. I'm using a small range of 10.20.22.10 -> 10.20.22.20 since I basically only need one LoadBalancer for the Traefik Ingress Controller |
 
@@ -64,4 +66,5 @@ Here's a list of different application that I run my homelab
 | **[Prowlarr](https://traefik.io/)** | Index manager for cat stuff... |
 | **[Jellyfin](https://jellyfin.org/)** | Media Streaming Server. Better than Plex IMO |
 | **[Jellyseer](https://seerr.dev)** | A nice GUI for requesting new cat content with automatic integration to Radarr, Sonarr and Prowlarr |
+| **[Home Assistant](https://www.home-assistant.io/)** | Open source home automation platform for controlling and automating smart home devices |
 

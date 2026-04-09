@@ -16,9 +16,12 @@ spec:
     spec:
       restartPolicy: Always
 
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
+
       containers:
       - name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:1.37.0.5076-ls120
+        image: lscr.io/linuxserver/prowlarr:2.3.5.5327-ls141
 
         ports:
         - containerPort: 9696

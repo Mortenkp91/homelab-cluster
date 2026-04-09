@@ -5,9 +5,9 @@ metadata:
   namespace: media
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: ""
-  volumeName: pv-nfs-media
+  volumeName: pv-local-media
   resources:
     requests:
       storage: 1.0Ti

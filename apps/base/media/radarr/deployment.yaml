@@ -16,9 +16,12 @@ spec:
     spec:
       restartPolicy: Always
 
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
+
       containers:
       - name: radarr
-        image: lscr.io/linuxserver/radarr:5.26.2.10099-ls276
+        image: lscr.io/linuxserver/radarr:6.1.1.10360-ls298
 
         ports:
         - containerPort: 7878

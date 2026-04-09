@@ -6,5 +6,5 @@ metadata:
   namespace: media
 data:
   TZ: Europe/Copenhagen
-  QBT_WEBUI_PORT: "&port 80"
-  QBT_TORRENTING_PORT: "&torrentPort 6881"
+  QBT_WEBUI_PORT: "8080"
+  QBT_TORRENTING_PORT: "6881"

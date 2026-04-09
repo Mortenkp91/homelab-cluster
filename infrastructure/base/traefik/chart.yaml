@@ -5,23 +5,55 @@ metadata:
   namespace: traefik
 spec:
   interval: 10m
+  install:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
   chart:
     spec:
       chart: traefik
-      version: '36.1.0'
+      version: '39.0.7'
       sourceRef:
         kind: HelmRepository
         name: traefik
         namespace: traefik
       interval: 10m
   values:
-    nodeSelector:
-      node-role.kubernetes.io/master: "true"
+    service:
+      annotations:
+        kube-vip.io/loadbalancerIPs: "10.20.22.11"
+      spec:
+        loadBalancerIP: "10.20.22.11"
 
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: "true"
+
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+
+    providers:
+      kubernetesGateway:
+        enabled: true
+    gateway:
+      enabled: false
     ports:
       web:
-        redirections:
-          entryPoint:
-            to: websecure
-            scheme: https
-            permanent: true
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
+      websecure:
+        http:
+          tls:
+            enabled: true

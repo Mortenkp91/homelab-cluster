@@ -4,6 +4,15 @@ metadata:
   name: cert-manager
   namespace: cert-manager
 spec:
+  install:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+      retryInterval: 5m
+  storageNamespace: cert-manager
   chart:
     spec:
       chart: cert-manager
@@ -11,7 +20,7 @@ spec:
         kind: HelmRepository
         name: cert-manager
         namespace: cert-manager
-      version: 1.18.0
+      version: v1.20.1
   interval: 1m0s
   releaseName: cert-manager
   targetNamespace: cert-manager

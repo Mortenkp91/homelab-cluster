@@ -1,12 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: frigate-certificate
-  namespace: frigate
+  name: mkped-wildcard-certificate
+  namespace: traefik
 spec:
-  secretName: frigate-certificate-secret
+  secretName: mkped-wildcard-certificate-secret
   issuerRef:
     name: cloudfare-clusterissuer
     kind: ClusterIssuer
   dnsNames:
-    - frigate.mkped.com
+    - "*.mkped.com"
+    - "mkped.com"

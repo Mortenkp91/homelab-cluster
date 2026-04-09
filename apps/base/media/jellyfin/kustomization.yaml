@@ -4,5 +4,4 @@ resources:
   - service.yaml
   - deployment.yaml
   - pvc.yaml
-  - ingress.yaml
-  - certificate.yaml
+  - httproute.yaml

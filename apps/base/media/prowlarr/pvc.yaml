@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: ""
-  volumeName: pv-nfs-prowlarr-config
+  volumeName: pv-local-prowlarr-config
   resources:
     requests:
       storage: 1Gi
