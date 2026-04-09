@@ -15,6 +15,8 @@ spec:
       template:
         spec:
           restartPolicy: Never
+          imagePullSecrets:
+            - name: ghcr-credentials
           containers:
             - name: automatic-parking-registration
               image: ghcr.io/mortenkp91/automatic-parking-registration:v0.1.0
