@@ -30,3 +30,18 @@ spec:
                     secretKeyRef:
                       name: phone-number
                       key: PHONE_NUMBER
+                - name: TWILIO_ACCOUNT_SID
+                  valueFrom:
+                    secretKeyRef:
+                      name: twilio-account-sid
+                      key: TWILIO_ACCOUNT_SID
+                - name: TWILIO_AUTH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: twilio-auth-token
+                      key: TWILIO_AUTH_TOKEN
+                - name: TWILIO_FROM_NUMBER
+                  valueFrom:
+                    secretKeyRef:
+                      name: twilio-phone-number
+                      key: TWILIO_FROM_NUMBER
