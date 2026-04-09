@@ -11,3 +11,4 @@ resources:
 - ./media/jellyseer
 - frigate
 - homeassistant
+- automatic-parking-registration
