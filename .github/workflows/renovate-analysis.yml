@@ -49,65 +49,23 @@ jobs:
           gh pr diff "$PR_NUMBER" > /tmp/pr.diff || true
           gh pr view "$PR_NUMBER" --json files --jq '.files[].path' > /tmp/pr.files
 
-      - name: Build prompt
+      - name: Render user prompt
+        env:
+          TEMPLATE_PATH: .github/prompts/renovate-user.md
         run: |
           set -euo pipefail
-          TITLE=$(jq -r .title /tmp/pr.json)
-          BODY=$(jq -r .body /tmp/pr.json | head -c 8000)
-          DIFF=$(head -c 16000 /tmp/pr.diff)
-          FILES=$(cat /tmp/pr.files)
+          export TITLE=$(jq -r .title /tmp/pr.json)
+          export BODY=$(jq -r .body /tmp/pr.json | head -c 8000)
+          export DIFF=$(head -c 16000 /tmp/pr.diff)
+          export FILES=$(cat /tmp/pr.files)
 
-          cat > /tmp/system.md <<'SYS'
-          You are a senior Kubernetes/GitOps engineer reviewing a Renovate dependency update for a k3s + Flux CD homelab cluster.
-
-          Cluster criticality map (use to weight blast radius):
-          - CRITICAL: k3s, kube-vip, kube-vip-cloud-controller, traefik, cert-manager, NFS provisioner — failure breaks networking, ingress, TLS, or storage
-          - HIGH: external-secrets-operator, flux controllers — failure breaks GitOps reconciliation or secret sync
-          - MEDIUM: kube-prometheus-stack, loki, grafana, promtail — failure degrades observability only
-          - LOW: end-user apps under apps/ — failure affects only that app
-
-          Severity rubric:
-          - low: minor/patch on LOW or MEDIUM component, release notes clean, no API or behavior changes
-          - medium: minor on CRITICAL/HIGH OR minor on MEDIUM with non-trivial release notes
-          - high: minor on CRITICAL/HIGH where release notes mention deprecations, removed flags, schema changes, or behavior changes
-          - critical: major bump, OR any release note containing "BREAKING", "removed", "no longer supported", required migration steps, or CVE remediation that needs config change
-
-          Output rules:
-          - Return a SINGLE JSON object. No markdown fences. No prose before or after.
-          - Keep prose fields terse. This is for an experienced operator who skims.
-          - If release notes are absent or unclear, say so in `reasoning` and bias severity up one step.
-
-          Schema:
-          {
-            "severity": "low" | "medium" | "high" | "critical",
-            "summary": "one sentence — what changed and why it matters",
-            "affected_components": ["cluster components touched by this update"],
-            "breaking_signals": ["specific quoted phrases or items from release notes that indicate breaking change; empty array if none"],
-            "release_note_highlights": ["3-5 short bullets of what changed"],
-            "recommendation": "auto-merge-safe" | "needs-review" | "do-not-merge",
-            "reasoning": "2-3 sentences linking severity to blast radius and release-note signals"
-          }
-          SYS
-
-          {
-            echo "# Renovate PR"
-            echo ""
-            echo "## Title"
-            echo "$TITLE"
-            echo ""
-            echo "## Changed files"
-            echo '```'
-            echo "$FILES"
-            echo '```'
-            echo ""
-            echo "## PR body (Renovate release notes, truncated)"
-            echo "$BODY"
-            echo ""
-            echo "## Diff (truncated)"
-            echo '```diff'
-            echo "$DIFF"
-            echo '```'
-          } > /tmp/prompt.md
+          python3 - <<'PY'
+          import os, pathlib
+          tpl = pathlib.Path(os.environ["TEMPLATE_PATH"]).read_text()
+          for key in ("TITLE", "BODY", "DIFF", "FILES"):
+              tpl = tpl.replace("{{" + key + "}}", os.environ.get(key, ""))
+          pathlib.Path("/tmp/prompt.md").write_text(tpl)
+          PY
 
       - name: Run AI analysis
         id: ai
@@ -115,7 +73,7 @@ jobs:
         with:
           model: ${{ env.MODEL }}
           max-completion-tokens: 1500
-          system-prompt-file: /tmp/system.md
+          system-prompt-file: .github/prompts/renovate-system.md
           prompt-file: /tmp/prompt.md
 
       - name: Parse response and post comment
