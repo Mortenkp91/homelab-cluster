@@ -69,3 +69,15 @@ Here's a list of different application that I run my homelab
 | **[Home Assistant](https://www.home-assistant.io/)** | Open source home automation platform for controlling and automating smart home devices |
 | **Automatic Parking Registration** | Never getting a parking ticket again! Small app that registers parking for me. Hosted as a CronJob and runs on weekdays at 07:30. |
 
+
+# Agentic dependency updates
+
+Renovate finds the upgrades, but reading every release note and deciding what's safe to merge is still on me. To get that time back, I layered a small LLM-driven analysis on top of it:
+
+- **Patches** — Renovate auto-merges them after a 3-day soak, so yanked releases never reach the cluster. No LLM involved.
+- **Minor & major** — A GitHub Actions workflow ([`.github/workflows/renovate-analysis.yml`](.github/workflows/renovate-analysis.yml)) fires when Renovate opens the PR. It sends the title, release notes and diff to an LLM via [GitHub Models](https://github.com/marketplace?type=models) (free tier, currently `openai/gpt-5-mini`) and posts back a structured risk report: severity, affected components, breaking-change signals, recommendation. The PR is then tagged with `risk:low|medium|high|critical` and `needs-review` so my review queue is filterable at a glance.
+
+The analysis is cluster-aware: the system prompt encodes which components are critical to *this* cluster (k3s, kube-vip, Traefik, cert-manager, NFS) versus observability versus end-user apps, so blast-radius reasoning isn't generic boilerplate. No cluster credentials live in CI — it's purely static analysis against the PR diff and Renovate's release-note dump.
+
+Net effect: patch-level noise clears itself; minor and major upgrades land in my queue with the context I'd have written by hand, in seconds rather than ten minutes per PR.
+

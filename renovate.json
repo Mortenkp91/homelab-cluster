@@ -13,6 +13,16 @@
     {
       "matchPackageNames": ["/^(gh|ls)cr\\.io\\/linuxserver\\//"],
       "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)((\\.|-r)(?<build>\\d+))?-ls(?<revision>\\d+)$"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchUpdateTypes": ["minor", "major"],
+      "addLabels": ["renovate:needs-analysis"]
     }
   ]
 }

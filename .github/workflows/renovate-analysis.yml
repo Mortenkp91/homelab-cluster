@@ -1,0 +1,203 @@
+name: Renovate Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  models: read
+
+jobs:
+  analyze:
+    if: >-
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      contains(github.event.pull_request.labels.*.name, 'renovate:needs-analysis')
+    runs-on: ubuntu-latest
+    env:
+      MODEL: openai/gpt-5-mini
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure labels exist
+        run: |
+          set -euo pipefail
+          declare -A LABELS=(
+            [renovate:needs-analysis]="fbca04|Renovate minor/major PR awaiting risk analysis"
+            [risk:low]="0e8a16|Low blast-radius dependency change"
+            [risk:medium]="fbca04|Medium blast-radius dependency change"
+            [risk:high]="d93f0b|High blast-radius dependency change"
+            [risk:critical]="b60205|Critical/breaking dependency change"
+            [needs-review]="5319e7|Requires human review before merge"
+          )
+          for name in "${!LABELS[@]}"; do
+            IFS='|' read -r color desc <<<"${LABELS[$name]}"
+            gh label create "$name" --color "$color" --description "$desc" --force >/dev/null
+          done
+
+      - name: Gather PR context
+        run: |
+          set -euo pipefail
+          gh pr view "$PR_NUMBER" --json title,body,labels > /tmp/pr.json
+          gh pr diff "$PR_NUMBER" > /tmp/pr.diff || true
+          gh pr view "$PR_NUMBER" --json files --jq '.files[].path' > /tmp/pr.files
+
+      - name: Build prompt
+        run: |
+          set -euo pipefail
+          TITLE=$(jq -r .title /tmp/pr.json)
+          BODY=$(jq -r .body /tmp/pr.json | head -c 8000)
+          DIFF=$(head -c 16000 /tmp/pr.diff)
+          FILES=$(cat /tmp/pr.files)
+
+          cat > /tmp/system.md <<'SYS'
+          You are a senior Kubernetes/GitOps engineer reviewing a Renovate dependency update for a k3s + Flux CD homelab cluster.
+
+          Cluster criticality map (use to weight blast radius):
+          - CRITICAL: k3s, kube-vip, kube-vip-cloud-controller, traefik, cert-manager, NFS provisioner — failure breaks networking, ingress, TLS, or storage
+          - HIGH: external-secrets-operator, flux controllers — failure breaks GitOps reconciliation or secret sync
+          - MEDIUM: kube-prometheus-stack, loki, grafana, promtail — failure degrades observability only
+          - LOW: end-user apps under apps/ — failure affects only that app
+
+          Severity rubric:
+          - low: minor/patch on LOW or MEDIUM component, release notes clean, no API or behavior changes
+          - medium: minor on CRITICAL/HIGH OR minor on MEDIUM with non-trivial release notes
+          - high: minor on CRITICAL/HIGH where release notes mention deprecations, removed flags, schema changes, or behavior changes
+          - critical: major bump, OR any release note containing "BREAKING", "removed", "no longer supported", required migration steps, or CVE remediation that needs config change
+
+          Output rules:
+          - Return a SINGLE JSON object. No markdown fences. No prose before or after.
+          - Keep prose fields terse. This is for an experienced operator who skims.
+          - If release notes are absent or unclear, say so in `reasoning` and bias severity up one step.
+
+          Schema:
+          {
+            "severity": "low" | "medium" | "high" | "critical",
+            "summary": "one sentence — what changed and why it matters",
+            "affected_components": ["cluster components touched by this update"],
+            "breaking_signals": ["specific quoted phrases or items from release notes that indicate breaking change; empty array if none"],
+            "release_note_highlights": ["3-5 short bullets of what changed"],
+            "recommendation": "auto-merge-safe" | "needs-review" | "do-not-merge",
+            "reasoning": "2-3 sentences linking severity to blast radius and release-note signals"
+          }
+          SYS
+
+          {
+            echo "# Renovate PR"
+            echo ""
+            echo "## Title"
+            echo "$TITLE"
+            echo ""
+            echo "## Changed files"
+            echo '```'
+            echo "$FILES"
+            echo '```'
+            echo ""
+            echo "## PR body (Renovate release notes, truncated)"
+            echo "$BODY"
+            echo ""
+            echo "## Diff (truncated)"
+            echo '```diff'
+            echo "$DIFF"
+            echo '```'
+          } > /tmp/prompt.md
+
+      - name: Run AI analysis
+        id: ai
+        uses: actions/ai-inference@v1
+        with:
+          model: ${{ env.MODEL }}
+          max-completion-tokens: 1500
+          system-prompt-file: /tmp/system.md
+          prompt-file: /tmp/prompt.md
+
+      - name: Parse response and post comment
+        env:
+          RESPONSE: ${{ steps.ai.outputs.response }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$RESPONSE" > /tmp/response.raw
+
+          # Strip accidental markdown fences if model added them despite instructions
+          sed -E '1s/^```json//; 1s/^```//; $s/```$//' /tmp/response.raw > /tmp/response.json
+
+          if jq empty /tmp/response.json 2>/dev/null; then
+            SEVERITY=$(jq -r '.severity // "unknown"' /tmp/response.json)
+            SUMMARY=$(jq -r '.summary // "(no summary)"' /tmp/response.json)
+            RECOMMENDATION=$(jq -r '.recommendation // "needs-review"' /tmp/response.json)
+            REASONING=$(jq -r '.reasoning // ""' /tmp/response.json)
+            AFFECTED=$(jq -r '.affected_components // [] | map("- " + .) | join("\n")' /tmp/response.json)
+            BREAKING=$(jq -r '.breaking_signals // [] | map("- " + .) | join("\n")' /tmp/response.json)
+            HIGHLIGHTS=$(jq -r '.release_note_highlights // [] | map("- " + .) | join("\n")' /tmp/response.json)
+            PARSE_OK=1
+          else
+            SEVERITY="unknown"
+            RECOMMENDATION="needs-review"
+            PARSE_OK=0
+          fi
+
+          {
+            echo "<!-- claude-renovate-analysis -->"
+            echo "## Renovate risk analysis"
+            echo ""
+            if [ "$PARSE_OK" = "1" ]; then
+              echo "**Severity:** \`$SEVERITY\` &nbsp; **Recommendation:** \`$RECOMMENDATION\`"
+              echo ""
+              echo "**Summary:** $SUMMARY"
+              echo ""
+              echo "### Affected components"
+              echo "${AFFECTED:-_none identified_}"
+              echo ""
+              echo "### Release-note highlights"
+              echo "${HIGHLIGHTS:-_none extracted_}"
+              echo ""
+              echo "### Breaking-change signals"
+              echo "${BREAKING:-_none_}"
+              echo ""
+              echo "### Reasoning"
+              echo "$REASONING"
+            else
+              echo "**Severity:** \`unknown\` &nbsp; **Recommendation:** \`needs-review\`"
+              echo ""
+              echo "Could not parse model response as JSON. Raw output below."
+              echo ""
+              echo '```'
+              head -c 4000 /tmp/response.raw
+              echo ""
+              echo '```'
+            fi
+            echo ""
+            echo "---"
+            echo "<sub>Generated by \`.github/workflows/renovate-analysis.yml\` using \`$MODEL\` via GitHub Models. Re-run by removing and re-adding the \`renovate:needs-analysis\` label.</sub>"
+          } > /tmp/comment.md
+
+          # Upsert: edit existing comment with our marker, else create new
+          EXISTING=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- claude-renovate-analysis -->")) | .id' | head -1)
+          if [ -n "$EXISTING" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$EXISTING" \
+              --method PATCH --field body=@/tmp/comment.md >/dev/null
+            echo "Updated existing comment $EXISTING"
+          else
+            gh pr comment "$PR_NUMBER" --body-file /tmp/comment.md
+          fi
+
+          # Apply risk label (clear any previous risk:* first to avoid stacking)
+          for old in risk:low risk:medium risk:high risk:critical; do
+            gh pr edit "$PR_NUMBER" --remove-label "$old" 2>/dev/null || true
+          done
+          if [ "$SEVERITY" != "unknown" ]; then
+            gh pr edit "$PR_NUMBER" --add-label "risk:$SEVERITY"
+          fi
+
+          # Apply needs-review unless model said auto-merge-safe (rare for minor/major but possible)
+          if [ "$RECOMMENDATION" != "auto-merge-safe" ]; then
+            gh pr edit "$PR_NUMBER" --add-label "needs-review"
+          fi
