@@ -69,7 +69,7 @@ jobs:
 
       - name: Run AI analysis
         id: ai
-        uses: actions/ai-inference@v2
+        uses: actions/ai-inference@v3
         with:
           model: ${{ env.MODEL }}
           max-completion-tokens: 1500
