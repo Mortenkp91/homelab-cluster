@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a GitOps-managed Kubernetes homelab cluster running on k3s with Flux CD. The cluster consists of 3 nodes (1 master Intel NUC, 2 worker Lenovo ThinkCentre) running Ubuntu. All configuration is declarative YAML managed through Git.
+This is a GitOps-managed Kubernetes homelab cluster running on k3s with Flux CD. The cluster runs on a single node (`mpe-001`, an Intel NUC) running Ubuntu; the former worker nodes have been removed. All workloads and local PersistentVolumes must target `mpe-001`. All configuration is declarative YAML managed through Git.
 
 ## Repository Structure
 
@@ -50,7 +50,7 @@ Flux reconciles in this order (defined in `clusters/production/`):
 - **Traefik**: Ingress controller with automatic HTTP->HTTPS redirect
 - **cert-manager**: TLS certificates via Let's Encrypt
 - **kube-prometheus-stack + Loki**: Monitoring and logging
-- **NFS**: Shared storage from master node
+- **Local PersistentVolumes** (`infrastructure/base/local/`): static PVs on `mpe-001`; app config lives under `/srv/nfs/configs/<app>`
 
 ## No Build/Test Commands
 
