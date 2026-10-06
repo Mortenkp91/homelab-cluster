@@ -78,7 +78,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /var/lib/k8s-local/prowlarr
+    path: /srv/nfs/configs/prowlarr
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -86,7 +86,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - mpe-002
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -144,7 +144,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /var/lib/k8s-local/jellyseer
+    path: /srv/nfs/configs/jellyseer
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -152,7 +152,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - mpe-002
+          - mpe-001
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -210,7 +210,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /var/lib/k8s-local/homeassistant
+    path: /srv/nfs/configs/homeassistant
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -218,4 +218,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - mpe-002
+          - mpe-001
