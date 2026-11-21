@@ -19,7 +19,7 @@ The purpose is to strengthen my skills within the Kubernetes and Cloud Native la
 
 # Cluster Architecture
 
-I've started out simple with a small cluster consisting of 3 nodes, 1 master and two worker nodes. I'm using `k3s` as my Kubernetes distribution along with FluxCD as my GitOps toolkit. The bootstrapping process is currently done manually by installing Ubuntu Server along side with k3s with master/worker node configuration. I'm planning on getting upgrading to a more beefy Mini PC to host all of the nodes using Proxmox with Talos Linux OS provisioned through Terraform for a more streamlined setup.
+I've started out simple with a small cluster consisting of 3 nodes, 1 master and two worker nodes. I'm using `k3s` as my Kubernetes distribution along with Argo CD as my GitOps toolkit. The bootstrapping process is currently done manually by installing Ubuntu Server along side with k3s; the few steps that have to happen before Argo CD can take over are in the [bootstrap runbook](bootstrap/README.md). I'm planning on getting upgrading to a more beefy Mini PC to host all of the nodes using Proxmox with Talos Linux OS provisioned through Terraform for a more streamlined setup.
 
 The cluster is completely private and is not exposed to the public internet. This is by design since I don't have a need for exposing my homelab. It opens up for a completely different set of security problems I would need to address. In case I need to connect to my cluster when not at home, my Ubiquiti Dream Router hosts a WireGuard VPN Gateway.
 
@@ -41,17 +41,15 @@ Here's all the components I used to run my homelab
 
 | Name | Description |
 |------|-------------|
-| **[Flux CD](https://fluxcd.io/)** | My GitOps solution of choice. The core functionality that allows for simple and iterative changes to my cluster. Using GitOps, I've my desired state stored in Git and I dont need to think about backing up the current state |
+| **[Argo CD](https://argo-cd.readthedocs.io/)** | My GitOps solution of choice, set up as an app-of-apps with sync waves and managing itself. The core functionality that allows for simple and iterative changes to my cluster. Using GitOps, I've my desired state stored in Git and I dont need to think about backing up the current state |
 | **[Cert Manager](https://cert-manager.io/)** | X.509 certificate management for Kubernetes. I'm using Let's Encrypted as a provider for getting free TLS certs on my apps. |
 | **[Cloudflare](https://www.cloudflare.com/)** | DNS Management. Used together with ``external-dns`` to automatically sync Ingress DNS records to Cloudflare. |
 | **[External DNS](https://github.com/kubernetes-sigs/external-dns)** | Automatically synchronizes Kubernetes Ingress and Service resources to Cloudflare DNS records. |
 | **[External Secrets Operator](https://external-secrets.io/)** | Syncs my secrets stored in Azure Key Vault to my cluster. |
-| **[Traefik](https://traefik.io/)** | My Ingress Controller of choice. Natively supports Ingress and the new Gateway API |
-| **[Grafana](https://grafana.com/)** | The best in class open source observability platform. Why use something else? |
-| **[Prometheus](https://prometheus.io/)** | Open sourced pull based monitoring system |
+| **[Cilium](https://cilium.io/)** | eBPF based CNI. Replaces both flannel and kube-proxy, hands out LoadBalancer IPs from a small range in the VLAN (10.20.22.10 -> 10.20.22.20) and announces them over ARP. Hubble gives me a live view of the network flows |
+| **[Envoy Gateway](https://gateway.envoyproxy.io/)** | My Gateway API implementation. Terminates TLS for every app on a single LoadBalancer IP |
 | **[NFS Subdir Provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)** | Dynamic NFS subdirectory provisioner for automatic PersistentVolume creation backed by the NFS server on the master node |
 | **[Renovate](https://www.mend.io/renovate/)** | Automated dependency updates. Currently installed as a GitHub Bot in my repository. I could host it my self, but the freely managed GitHub Bot works just fine! |
-| **[kubevip and kubevip-cloud-controller](https://kube-vip.io//)** | LoadBalancer IP assigment for bare metal setups. Whenever a new type of ``Service:LoadBalancer`` appears it assigns an IP address from a pre-configured IP range. This is configured in the VLAN. I'm using a small range of 10.20.22.10 -> 10.20.22.20 since I basically only need one LoadBalancer for the Traefik Ingress Controller |
 
 
 ## Applications
@@ -77,7 +75,7 @@ Renovate finds the upgrades, but reading every release note and deciding what's 
 - **Patches** — Renovate auto-merges them after a 3-day soak, so yanked releases never reach the cluster. No LLM involved.
 - **Minor & major** — A GitHub Actions workflow ([`.github/workflows/renovate-analysis.yml`](.github/workflows/renovate-analysis.yml)) fires when Renovate opens the PR. It sends the title, release notes and diff to an LLM via [GitHub Models](https://github.com/marketplace?type=models) (free tier, currently `openai/gpt-5-mini`) and posts back a structured risk report: severity, affected components, breaking-change signals, recommendation. The PR is then tagged with `risk:low|medium|high|critical` and `needs-review` so my review queue is filterable at a glance.
 
-The analysis is cluster-aware: the system prompt encodes which components are critical to *this* cluster (k3s, kube-vip, Traefik, cert-manager, NFS) versus observability versus end-user apps, so blast-radius reasoning isn't generic boilerplate. No cluster credentials live in CI — it's purely static analysis against the PR diff and Renovate's release-note dump.
+The analysis is cluster-aware: the system prompt encodes which components are critical to *this* cluster (k3s, Cilium, Argo CD, Envoy Gateway, cert-manager, External Secrets) versus end-user apps, so blast-radius reasoning isn't generic boilerplate. No cluster credentials live in CI — it's purely static analysis against the PR diff and Renovate's release-note dump.
 
 Net effect: patch-level noise clears itself; minor and major upgrades land in my queue with the context I'd have written by hand, in seconds rather than ten minutes per PR.
 

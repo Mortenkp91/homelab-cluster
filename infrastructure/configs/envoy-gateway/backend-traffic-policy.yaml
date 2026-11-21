@@ -1,0 +1,19 @@
+# Envoy cuts any response that is not complete within 15s of the request (route timeout default).
+# That breaks media streams (Jellyfin, Frigate), camera/MJPEG and SSE streams (Home Assistant,
+# Argo CD UI), large downloads and slow API calls (*arr interactive search). Disable it for every
+# route on the gateway; a route can still set its own with spec.rules[].timeouts.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: no-request-timeout
+  namespace: envoy-gateway-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: homelab-gateway
+  timeout:
+    http:
+      requestTimeout: 0s

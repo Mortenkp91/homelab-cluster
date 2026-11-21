@@ -1,0 +1,27 @@
+provider:
+  name: cloudflare
+
+env:
+  - name: CF_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-api-token
+        key: CF_API_TOKEN
+
+policy: upsert-only
+sources:
+  - gateway-httproute
+txtOwnerId: homelab
+interval: 1m
+# Force all DNS records to point to the Envoy Gateway LoadBalancer IP,
+# ignoring whatever addresses are in the Gateway status
+extraArgs:
+  - --default-targets=10.20.22.11
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "64Mi"
+  limits:
+    cpu: "100m"
+    memory: "128Mi"

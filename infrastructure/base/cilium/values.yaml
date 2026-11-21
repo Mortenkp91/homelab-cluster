@@ -1,0 +1,114 @@
+# Cilium on single-node k3s (mpe-001), replacing flannel and kube-proxy.
+# Used twice: by the bootstrap runbook (helm template, before Argo CD exists)
+# and by the `cilium` Application that adopts the result. Nothing in here may
+# render differently from one `helm template` run to the next.
+
+# k3s must run with --flannel-backend=none --disable-network-policy
+# --disable-kube-proxy.
+kubeProxyReplacement: true
+
+# Without kube-proxy the in-cluster API address (10.43.0.1) only exists once
+# Cilium is up, so the agent and operator (both hostNetwork) talk to the k3s
+# apiserver on loopback. Valid on k3s server nodes only; an agent-only node
+# would need 127.0.0.1:6444 (k3s agent load balancer) instead.
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 6443
+
+ipam:
+  mode: cluster-pool
+  operator:
+    # k3s --cluster-cidr default
+    clusterPoolIPv4PodCIDRList:
+      - 10.42.0.0/16
+    clusterPoolIPv4MaskSize: 24
+
+# Single node: no overlay needed. Pod traffic leaving the node is masqueraded
+# to the node IP in eBPF.
+routingMode: native
+ipv4NativeRoutingCIDR: 10.42.0.0/16
+autoDirectNodeRoutes: true
+bpf:
+  masquerade: true
+
+ipv6:
+  enabled: false
+
+operator:
+  replicas: 1
+  rollOutPods: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+rollOutCiliumPods: true
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
+# Hubble: flow visibility, with the relay and the UI (https://hubble.mkped.com, routed in
+# infrastructure/configs/hubble). No metrics: there is no Prometheus to scrape them.
+hubble:
+  enabled: true
+  tls:
+    auto:
+      # The agents, the relay and the UI talk mutual TLS with certificates from a private CA; a public
+      # CA such as Let's Encrypt cannot issue those names (*.default.hubble-grpc.cilium.io). The
+      # method decides who creates them:
+      # - helm (chart default): generated inside the templates, so every `helm template` produces
+      #   new ones and Argo CD would see permanent drift and roll the agents on each sync.
+      # - certmanager: needs cert-manager's CRDs, which do not exist when Cilium is bootstrapped.
+      # - cronJob: a certgen Job creates the Secrets in the cluster and a CronJob renews them. The
+      #   chart renders no Secret at all, so there is nothing to drift.
+      method: cronJob
+  relay:
+    enabled: true
+    rollOutPods: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+  ui:
+    enabled: true
+    rollOutPods: true
+    backend:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+    frontend:
+      resources:
+        requests:
+          cpu: 5m
+          memory: 32Mi
+        limits:
+          memory: 128Mi
+
+# No L7 network policies and no Cilium Ingress/Gateway API (Envoy Gateway is
+# the gateway), so the per-node cilium-envoy DaemonSet is not needed.
+l7Proxy: false
+envoy:
+  enabled: false
+
+# Envoy Gateway owns Gateway API.
+gatewayAPI:
+  enabled: false
+ingressController:
+  enabled: false
+
+# LoadBalancer Services get their address from Cilium LB-IPAM (the pool is in
+# infrastructure/configs/cilium) and Cilium answers ARP for it on the LAN, which is what kube-vip and
+# its cloud provider did before. Needs kubeProxyReplacement. The chart's client rate limit defaults are
+# enough: the extra API load is one Lease renewal per LoadBalancer Service, and there are two.
+# externalTrafficPolicy: Local is not supported for announced Services; keep them on Cluster.
+l2announcements:
+  enabled: true

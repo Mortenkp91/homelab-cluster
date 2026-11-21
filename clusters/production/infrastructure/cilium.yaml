@@ -1,0 +1,38 @@
+# bootstrap/render-chart.sh renders this chart version with this values file to install Cilium before
+# Argo CD exists (no CNI = no pods); this Application then adopts those resources.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: infrastructure
+  sources:
+    - repoURL: https://helm.cilium.io
+      chart: cilium
+      targetRevision: 1.20.5
+      helm:
+        releaseName: cilium
+        valueFiles:
+          - $values/infrastructure/base/cilium/values.yaml
+    - repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

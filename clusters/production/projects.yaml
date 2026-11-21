@@ -1,0 +1,51 @@
+# Wave -1: the projects must exist before any Application that references them.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: Cluster platform (CNI, gateway, certificates, secrets, storage, Argo CD). Unrestricted.
+  sourceRepos:
+    - '*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: Workloads under apps/production. This repo only, no platform namespaces, Namespace is the only cluster-scoped kind.
+  sourceRepos:
+    - https://github.com/Mortenkp91/homelab-cluster.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+    # A destination is allowed when an allow rule matches and no deny (!) rule does.
+    - server: https://kubernetes.default.svc
+      namespace: '!kube-*'
+    - server: https://kubernetes.default.svc
+      namespace: '!argocd'
+    - server: https://kubernetes.default.svc
+      namespace: '!cert-manager'
+    - server: https://kubernetes.default.svc
+      namespace: '!external-secrets'
+    - server: https://kubernetes.default.svc
+      namespace: '!external-dns'
+    - server: https://kubernetes.default.svc
+      namespace: '!envoy-gateway-system'
+  # The app manifests create their own Namespace; the static PersistentVolumes belong to the
+  # infrastructure project (infrastructure/base/local).
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace

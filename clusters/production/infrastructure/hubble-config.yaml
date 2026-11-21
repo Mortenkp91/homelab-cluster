@@ -1,0 +1,29 @@
+# Route for the Hubble UI. Hubble itself is part of the cilium chart; the route waits for the Gateway.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hubble-config
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+    targetRevision: main
+    path: infrastructure/configs/hubble
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

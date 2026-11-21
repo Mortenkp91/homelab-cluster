@@ -1,0 +1,18 @@
+# /etc/rancher/k3s/config.yaml for the single k3s server mpe-001 (10.20.22.81).
+# Copy it into place BEFORE running the k3s installer; see README.md in this directory.
+# Keys are k3s server flags without the leading dashes.
+
+# Cilium is the CNI, the network policy engine and the kube-proxy replacement, so all three k3s
+# built-ins are off. Until Cilium is installed the node stays NotReady and no pod gets an IP.
+flannel-backend: none
+disable-network-policy: true
+disable-kube-proxy: true
+
+disable:
+  - traefik # Envoy Gateway is the ingress
+  - servicelb # Cilium LB-IPAM hands out LoadBalancer IPs (10.20.22.10-20)
+
+# k3s defaults, written out because infrastructure/base/cilium/values.yaml hardcodes the pod CIDR
+# (ipam and native routing). Change them together or not at all.
+cluster-cidr: 10.42.0.0/16
+service-cidr: 10.43.0.0/16

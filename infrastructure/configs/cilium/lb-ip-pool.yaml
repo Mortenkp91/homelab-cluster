@@ -1,0 +1,11 @@
+# Addresses Cilium LB-IPAM hands to LoadBalancer Services. The range is reserved for the cluster
+# on the VLAN. A Service asks for a fixed one with the annotation lbipam.cilium.io/ips; in use
+# today: .11 Envoy Gateway, .12 qBittorrent.
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: homelab
+spec:
+  blocks:
+    - start: 10.20.22.10
+      stop: 10.20.22.20

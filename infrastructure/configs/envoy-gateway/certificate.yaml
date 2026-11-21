@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mkped-wildcard-certificate
+  namespace: envoy-gateway-system
+  annotations:
+    # Same wave as the Gateway, so the Gateway does not wait for the ACME order to finish.
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  secretName: mkped-wildcard-certificate-secret
+  issuerRef:
+    name: cloudfare-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.mkped.com"
+    - "mkped.com"

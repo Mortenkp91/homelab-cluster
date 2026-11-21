@@ -1,0 +1,14 @@
+# Envoy Gateway control plane (chart gateway-helm). The data plane (Envoy
+# pods and their LoadBalancer Service) is configured by the EnvoyProxy
+# resource in infrastructure/configs/envoy-gateway.
+
+# The chart would otherwise install the Gateway API CRDs (experimental
+# channel). Those are owned by the gateway-api Application; Envoy Gateway's
+# own CRDs come from the gateway-crds-helm chart (crds-values.yaml).
+crds:
+  enabled: false
+
+# Zone-aware routing only; pointless on one node, and it puts a pods/binding
+# webhook in front of the Envoy pods.
+topologyInjector:
+  enabled: false
