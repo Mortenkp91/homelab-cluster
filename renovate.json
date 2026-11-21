@@ -6,9 +6,28 @@
   "kubernetes": {
     "managerFilePatterns": ["/\\.yaml$/"]
   },
-  "flux": {
-    "fileMatch": ["\\.yaml$"]
+  "argocd": {
+    "managerFilePatterns": ["/^clusters/production/.+\\.yaml$/"]
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "CLI tools pinned for CI: a '# renovate: datasource=... depName=...' comment directly above each NAME_VERSION=value line",
+      "managerFilePatterns": ["/^scripts/install-tools\\.sh$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: extractVersion=(?<extractVersion>\\S+))?\\n[A-Z_]+_VERSION=(?<currentValue>\\S+)"
+      ]
+    },
+    {
+      "customType": "regex",
+      "description": "Vendored Gateway API CRD bundle: the version in the release URL in the comment above the vendored file",
+      "managerFilePatterns": ["/^infrastructure/base/gateway-api/kustomization\\.yaml$/"],
+      "matchStrings": [
+        "#\\s*https://github\\.com/(?<depName>kubernetes-sigs/gateway-api)/releases/download/(?<currentValue>[^/\\s]+)/standard-install\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases"
+    }
+  ],
   "packageRules": [
     {
       "matchPackageNames": ["/^(gh|ls)cr\\.io\\/linuxserver\\//"],
@@ -23,6 +42,26 @@
     {
       "matchUpdateTypes": ["minor", "major"],
       "addLabels": ["renovate:needs-analysis"]
+    },
+    {
+      "description": "The Applications' own git sources follow main on purpose; only chart versions are dependencies",
+      "matchManagers": ["argocd"],
+      "matchDatasources": ["git-tags"],
+      "enabled": false
+    },
+    {
+      "description": "Envoy Gateway and its CRD chart are two sources of one Application and must stay on the same version",
+      "matchManagers": ["argocd"],
+      "matchPackageNames": ["/envoyproxy/gateway-(crds-)?helm$/"],
+      "groupName": "envoy-gateway"
+    },
+    {
+      "description": "Renovate can only bump the version in the comment next to the vendored bundle. CI fails until the bundle itself is re-vendored, so this never merges on its own",
+      "matchPackageNames": ["kubernetes-sigs/gateway-api"],
+      "automerge": false,
+      "prBodyNotes": [
+        "This PR only changes the version in the comment. Before merging: check that the pinned Envoy Gateway release supports this Gateway API version (https://gateway.envoyproxy.io/news/releases/matrix/), then re-vendor the bundle on this branch (CI fails until you do):\n\n`curl -fsSL https://github.com/kubernetes-sigs/gateway-api/releases/download/{{{newVersion}}}/standard-install.yaml -o infrastructure/base/gateway-api/standard-install.yaml`"
+      ]
     }
   ]
 }

@@ -1,0 +1,42 @@
+# yamllint config for this repo. Run: yamllint .
+#
+# Errors are things that change meaning or break a parser (syntax, duplicate
+# keys, inconsistent indentation, octal/truthy surprises). Cosmetic rules that
+# existing manifests do not follow are warnings: they show up locally but CI
+# runs with --no-warnings, so nobody has to reformat a file to get a green
+# check. Flip a rule to "error" once the tree is clean for it.
+extends: default
+
+ignore: |
+  .cache/
+  # Vendored upstream bundle (Gateway API CRDs): not ours to restyle.
+  infrastructure/base/gateway-api/*.yaml
+
+rules:
+  # Kubernetes manifests are rarely written with "---" on line 1, and long
+  # image references, URLs and jq/shell one-liners are normal here.
+  document-start: disable
+  line-length: disable
+  # 2 spaces everywhere; "- item" may sit at the parent's column or be
+  # indented, as long as a file is consistent with itself.
+  indentation:
+    spaces: 2
+    indent-sequences: whatever
+    check-multi-line-strings: false
+  comments:
+    min-spaces-from-content: 1
+  # "on:" in workflows is a key, not a boolean.
+  truthy:
+    check-keys: false
+  # Unquoted 0644-style values are read as octal by YAML 1.1 parsers.
+  octal-values: enable
+  new-line-at-end-of-file:
+    level: warning
+  trailing-spaces:
+    level: warning
+  empty-lines:
+    level: warning
+  commas:
+    level: warning
+  comments-indentation:
+    level: warning

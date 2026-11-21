@@ -54,10 +54,12 @@ jobs:
           TEMPLATE_PATH: .github/prompts/renovate-user.md
         run: |
           set -euo pipefail
-          export TITLE=$(jq -r .title /tmp/pr.json)
-          export BODY=$(jq -r .body /tmp/pr.json | head -c 8000)
-          export DIFF=$(head -c 16000 /tmp/pr.diff)
-          export FILES=$(cat /tmp/pr.files)
+          TITLE=$(jq -r .title /tmp/pr.json)
+          # head closing the pipe early on a long body must not fail the step
+          BODY=$(jq -r .body /tmp/pr.json | head -c 8000) || true
+          DIFF=$(head -c 16000 /tmp/pr.diff)
+          FILES=$(cat /tmp/pr.files)
+          export TITLE BODY DIFF FILES
 
           python3 - <<'PY'
           import os, pathlib
