@@ -21,7 +21,7 @@ spec:
 
       # securityContext:
       #   runAsUser: 1001
-      #   runAsGroup: 1001
+      #   runAsGroup: 2001
       #   supplementalGroups:
       #     - 992
 
@@ -45,7 +45,7 @@ spec:
         - name: PUID
           value: "1001"
         - name: PGID
-          value: "1001"
+          value: "2001"
         - name: TZ
           value: "Europe/Copenhagen"  # Set your timezone
         - name: DOCKER_MODS

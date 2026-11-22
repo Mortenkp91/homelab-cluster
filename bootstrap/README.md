@@ -166,7 +166,7 @@ choices cannot be changed cleanly on a running cluster.
 ```bash
 sudo mkdir -p /etc/rancher/k3s
 sudo install -m 0644 bootstrap/k3s-config.yaml /etc/rancher/k3s/config.yaml
-curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=v1.35 sh -
+curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=v1.37 sh -
 
 # The old kubeconfig has the old cluster's CA and credentials.
 mkdir -p ~/.kube

@@ -20,6 +20,9 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
+        # The config directory is root:mediagroup (gid 2001), group-writable.
+        supplementalGroups:
+          - 2001
 
       containers:
       - name: jellyseer
