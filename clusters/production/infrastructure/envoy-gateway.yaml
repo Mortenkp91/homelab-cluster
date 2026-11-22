@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-gateway
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: infrastructure
+  sources:
+    # OCI Helm chart: registry path without the oci:// scheme.
+    - repoURL: docker.io/envoyproxy
+      chart: gateway-helm
+      targetRevision: 1.10.0
+      helm:
+        releaseName: envoy-gateway
+        valueFiles:
+          - $values/infrastructure/base/envoy-gateway/values.yaml
+    - repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+      targetRevision: main
+      ref: values
+    # Envoy Gateway's own CRDs (gateway.envoyproxy.io). gateway-helm can only install them bundled
+    # with the Gateway API CRDs, which the gateway-api Application owns. Keep on the same version
+    # as gateway-helm above.
+    - repoURL: docker.io/envoyproxy
+      chart: gateway-crds-helm
+      targetRevision: 1.10.0
+      helm:
+        releaseName: envoy-gateway-crds
+        valueFiles:
+          - $values/infrastructure/base/envoy-gateway/crds-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: envoy-gateway-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

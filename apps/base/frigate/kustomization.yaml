@@ -5,6 +5,4 @@ resources:
   - deployment.yaml
   - service.yaml
   - httproute.yaml
-  # - chart.yaml
-  # - repository.yaml
   - pvc.yaml

@@ -1,0 +1,22 @@
+# Hubble UI. TLS is terminated at the gateway with the Let's Encrypt wildcard certificate for
+# *.mkped.com. The UI has no login of its own: anyone who can reach the gateway can see the flows.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: hubble-route
+  namespace: kube-system
+spec:
+  parentRefs:
+    - name: homelab-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  hostnames:
+    - hubble.mkped.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: hubble-ui
+          port: 80

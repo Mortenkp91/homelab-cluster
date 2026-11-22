@@ -1,0 +1,324 @@
+# CI for a GitOps repo. Argo CD deploys whatever is on main, so a pull request
+# check is the last gate before a change reaches the cluster.
+#
+#   lint       yamllint, actionlint (+ shellcheck on run: blocks), shellcheck
+#   validate   scripts/validate.sh: render everything Argo CD will sync and
+#              check it (kubeconform, Argo CD consistency, repo policy)
+#   diff       render the PR and its base, diff the two, post the result as one
+#              sticky PR comment. This is what makes a chart bump reviewable.
+#   secrets    gitleaks over the commits being added (blocking)
+#   misconfig  kube-linter over the rendered manifests (advisory, see
+#              scripts/misconfig-scan.sh for what it takes to make it a gate)
+#   ci-ok      the one required status check; see the note at the bottom
+#
+# Every check is a script you can run locally: scripts/validate.sh, etc.
+# Tool versions are pinned in scripts/install-tools.sh (Renovate bumps them).
+# The helper scripts need PyYAML from the system python3; the runner image
+# ships it, and the install steps fall back to apt if that ever changes.
+#
+# Security model (public repo):
+# - Triggered by pull_request, never pull_request_target. The jobs run scripts
+#   from the pull request (render.sh, kustomize with whatever the PR puts in a
+#   kustomization, helm charts the PR points at). Under pull_request that code
+#   only ever sees a read-only token and no secrets: fork PRs get a read-only
+#   GITHUB_TOKEN no matter what is declared here, and this workflow declares
+#   contents: read for everything that touches PR content.
+#   pull_request_target would run with the base repo's write token and secrets
+#   next to that same PR-controlled code, which is the classic way to lose a
+#   repository.
+# - The only job with a write scope is diff-comment (pull-requests: write, and
+#   nothing else). It never checks out the repository and runs no script from
+#   it: its steps are the inline shell below, and the diff reaches it as an
+#   artifact that is size-capped and posted as a comment body, never executed
+#   or interpolated into a command. The PR number comes from the event, not
+#   from the artifact.
+# - Renovate branches live in this repository, so its PRs get the comment. On
+#   a fork PR the comment job is skipped (the token could not write anyway);
+#   the diff is still in the job summary and the artifact.
+# - Caches written by a PR run are scoped to that PR's ref; a PR cannot poison
+#   the cache main uses.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install tools
+        run: |
+          python3 -c 'import yaml' || sudo apt-get install --yes --no-install-recommends python3-yaml
+          scripts/install-tools.sh yamllint actionlint shellcheck
+
+      # Cosmetic rules are warnings in .yamllint.yaml; only errors fail the job.
+      - name: yamllint
+        run: yamllint --no-warnings .
+
+      # Finds shellcheck on PATH and applies it to every run: block.
+      - name: actionlint
+        run: actionlint -color
+
+      - name: shellcheck
+        run: shellcheck scripts/*.sh
+
+      - name: Python syntax
+        run: python3 -m py_compile scripts/lib/*.py
+
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install tools
+        run: |
+          python3 -c 'import yaml' || sudo apt-get install --yes --no-install-recommends python3-yaml
+          scripts/install-tools.sh helm kustomize kubeconform
+
+      # Pulled charts and downloaded schemas. A chart bump changes the key, so
+      # the cache is refreshed exactly when its content would be.
+      - name: Cache charts and schemas
+        uses: actions/cache@v6
+        with:
+          path: |
+            .cache/charts
+            .cache/kubeconform
+          key: gitops-${{ runner.os }}-${{ hashFiles('clusters/**/*.yaml', 'bootstrap/**/*.yaml', 'scripts/install-tools.sh') }}
+          restore-keys: |
+            gitops-${{ runner.os }}-
+
+      - name: Validate
+        run: scripts/validate.sh
+
+  diff:
+    name: render diff
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # The default ref is the merge commit: what main becomes if this PR is
+      # merged now. Its first parent is the base it was merged into.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Check out the base next to it
+        run: git worktree add --detach "$RUNNER_TEMP/base" HEAD^1
+
+      - name: Install tools
+        run: |
+          python3 -c 'import yaml' || sudo apt-get install --yes --no-install-recommends python3-yaml
+          scripts/install-tools.sh helm kustomize
+
+      - name: Cache charts
+        uses: actions/cache@v6
+        with:
+          path: .cache/charts
+          key: gitops-diff-${{ runner.os }}-${{ hashFiles('clusters/**/*.yaml', 'bootstrap/**/*.yaml', 'scripts/install-tools.sh') }}
+          restore-keys: |
+            gitops-diff-${{ runner.os }}-
+
+      # Both sides are rendered by this PR's scripts, so the diff shows what
+      # changed in the manifests and not what changed in the tooling. A target
+      # that fails to render is listed in the comment; the validate job is the
+      # one that fails for it.
+      - name: Render base and head
+        run: |
+          scripts/render.sh --root "$RUNNER_TEMP/base" "$RUNNER_TEMP/render/base" ||
+            echo "::warning::Some targets did not render on the base"
+          scripts/render.sh "$RUNNER_TEMP/render/head" ||
+            echo "::warning::Some targets did not render on this PR"
+
+      - name: Diff
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          base=$(git rev-parse --short HEAD^1)
+          head=$(git rev-parse --short HEAD^2)
+          python3 scripts/lib/gitops.py diff \
+            --base "$RUNNER_TEMP/render/base" --head "$RUNNER_TEMP/render/head" \
+            --out "$RUNNER_TEMP/render-diff" \
+            --title "What Argo CD would apply differently if \`$head\` were merged into \`$BASE_REF\` (\`$base\`)."
+          cat "$RUNNER_TEMP/render-diff/comment.md" >>"$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the diff
+        uses: actions/upload-artifact@v7
+        with:
+          name: render-diff
+          path: ${{ runner.temp }}/render-diff
+          if-no-files-found: error
+          retention-days: 14
+
+  # The only job with a write scope. No checkout, no repository code: see the
+  # security notes at the top before changing that.
+  diff-comment:
+    name: render diff comment
+    needs: diff
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download the diff
+        uses: actions/download-artifact@v8
+        with:
+          name: render-diff
+          path: render-diff
+
+      - name: Create or update the sticky comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MARKER: "<!-- gitops-render-diff -->"
+          LC_ALL: C.UTF-8
+        run: |
+          set -euo pipefail
+          body=render-diff/comment.md
+          # The artifact is data from a job that ran PR code: cap it, post it, nothing else.
+          # GitHub rejects bodies over 65536 characters.
+          if (($(wc -m <"$body") > 65000)); then
+            {
+              head -c 60000 "$body" | iconv -c -f UTF-8 -t UTF-8
+              printf '\n\n(truncated, see the render-diff artifact)\n'
+            } >body.md
+            body=body.md
+          fi
+          if ! head -n 1 "$body" | grep -qxF -- "$MARKER"; then
+            echo "comment.md does not start with the expected marker; refusing to post it." >&2
+            exit 1
+          fi
+          changes=$(jq -r '(.resources + .renderFailures) | tonumber' render-diff/summary.json)
+
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | startswith("<!-- gitops-render-diff -->")) | .id')
+          existing=${existing%%$'\n'*}
+          if [[ -n $existing ]]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" \
+              --field body=@"$body" >/dev/null
+            echo "Updated comment $existing"
+          elif ((changes > 0)); then
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+              --field body=@"$body" >/dev/null
+            echo "Created the comment"
+          else
+            echo "Nothing rendered differently and no earlier comment to update; staying quiet."
+          fi
+
+  secrets:
+    name: secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install tools
+        run: scripts/install-tools.sh gitleaks
+
+      # Scans every commit this change adds, so a secret that was committed and
+      # then removed in a later commit of the same PR is still caught (it would
+      # stay in the history of a public repo). A manual run scans all history.
+      - name: gitleaks
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          range=""
+          case "$EVENT" in
+            pull_request) range="$PR_BASE..$PR_HEAD" ;;
+            push) range="$PUSH_BEFORE..$GITHUB_SHA" ;;
+          esac
+          # A force push or a brand-new ref leaves no usable "before": scan everything.
+          if [[ -n $range ]] && ! git rev-parse --verify --quiet "${range%%..*}^{commit}" >/dev/null; then
+            range=""
+          fi
+          args=(git --redact --no-banner --verbose --exit-code 1)
+          if [[ -n $range ]]; then
+            echo "Scanning commits $range"
+            args+=(--log-opts="$range")
+          else
+            echo "Scanning the full history"
+          fi
+          gitleaks "${args[@]}" .
+
+  misconfig:
+    name: misconfiguration scan (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install tools
+        run: |
+          python3 -c 'import yaml' || sudo apt-get install --yes --no-install-recommends python3-yaml
+          scripts/install-tools.sh helm kustomize kube-linter
+
+      - name: Cache charts
+        uses: actions/cache@v6
+        with:
+          path: .cache/charts
+          key: gitops-misconfig-${{ runner.os }}-${{ hashFiles('clusters/**/*.yaml', 'bootstrap/**/*.yaml', 'scripts/install-tools.sh') }}
+          restore-keys: |
+            gitops-misconfig-${{ runner.os }}-
+
+      # Reports into the job summary and does not fail: the existing manifests
+      # have not been cleaned up to pass. Not part of ci-ok for the same reason.
+      - name: kube-linter
+        run: |
+          scripts/render.sh "$RUNNER_TEMP/rendered" || echo "::warning::Some targets did not render; scanning the rest"
+          scripts/misconfig-scan.sh "$RUNNER_TEMP/rendered" >>"$GITHUB_STEP_SUMMARY"
+          echo "Report written to the job summary."
+
+  # The single required status check. Branch protection and Renovate automerge
+  # only need to know this one name; add a job to "needs" to make it required.
+  # A plain "needs" would let a failed dependency show up as a skipped (and so
+  # passing) check, hence always() plus an explicit look at every result.
+  # "skipped" is accepted because the diff job does not run on pushes to main.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [lint, validate, diff, secrets]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Check the result of every required job
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          jq -r 'to_entries[] | "\(.key): \(.value.result)"' <<<"$NEEDS"
+          jq -e 'all(.[]; .result == "success" or .result == "skipped")' <<<"$NEEDS" >/dev/null

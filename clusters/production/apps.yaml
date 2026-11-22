@@ -1,16 +1,58 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+# One Application per directory under apps/production (media, frigate, homeassistant, ...). Each
+# directory is a self-contained kustomization whose manifests set their own namespace, and the
+# directory name equals that namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
 metadata:
   name: apps
-  namespace: flux-system
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
 spec:
-  interval: 5m
-  dependsOn:
-    - name: infra-configs
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./apps/production
-  prune: true 
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - git:
+        repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+        revision: main
+        directories:
+          - path: apps/production/*
+          # Was taken out of the Flux kustomization in September 2026 and is not deployed. Delete
+          # this exclude to run the parking CronJob again.
+          - path: apps/production/automatic-parking-registration
+            exclude: true
+  syncPolicy:
+    # Keeps the resources-finalizer off the generated Applications. With the finalizer (the
+    # ApplicationSet default), removing or renaming an app directory, or deleting this ApplicationSet,
+    # would cascade-delete the app's Namespace and with it every PVC. The data would survive (the
+    # static PVs are Retain local volumes under /srv/nfs), but each PV would be left Released and refuse to
+    # rebind until its spec.claimRef is cleared by hand. Without the finalizer, a removed app is only
+    # forgotten by Argo CD; delete its namespace yourself when you really mean it.
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      name: '{{ .path.basename }}'
+    spec:
+      project: apps
+      source:
+        repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+        targetRevision: main
+        path: '{{ .path.path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .path.basename }}'
+      syncPolicy:
+        # prune only removes what was deleted from Git inside an app that still exists (same as the
+        # Flux `prune: true` this replaces). Dropping a pvc.yaml therefore still deletes that PVC.
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ServerSideApply=true
+        retry:
+          limit: 10
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 5m

@@ -1,0 +1,8 @@
+# Values for the gateway-crds-helm chart: Envoy Gateway's own CRDs only
+# (gateway.envoyproxy.io). Gateway API CRDs are owned by the gateway-api
+# Application.
+crds:
+  gatewayAPI:
+    enabled: false
+  envoyGateway:
+    enabled: true

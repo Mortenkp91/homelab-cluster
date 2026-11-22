@@ -5,8 +5,8 @@ metadata:
   namespace: media
 spec:
   parentRefs:
-    - name: traefik-gateway
-      namespace: traefik
+    - name: homelab-gateway
+      namespace: envoy-gateway-system
       sectionName: https
   hostnames:
     - radarr.mkped.com

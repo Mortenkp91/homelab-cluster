@@ -1,0 +1,10 @@
+# The CRDs are regular chart templates (not Helm's crds/ dir), so Argo CD installs and upgrades them
+# with the release and would prune them if they stopped being rendered. Never set this to false on a
+# running cluster: deleting the CRDs deletes every Certificate and ClusterIssuer.
+crds:
+  enabled: true
+
+# Run the DNS-01 propagation check against public resolvers instead of the cluster DNS
+extraArgs:
+  - --dns01-recursive-nameservers-only
+  - --dns01-recursive-nameservers=1.1.1.1:53,1.0.0.1:53

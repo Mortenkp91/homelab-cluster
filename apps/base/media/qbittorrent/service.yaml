@@ -16,8 +16,12 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: qbittorrent-udp-svc            
-  namespace: media     
+  name: qbittorrent-udp-svc
+  namespace: media
+  annotations:
+    # The address this Service has had since the first cluster (the router forwards 6881 to it).
+    # Pinned so a rebuilt cluster does not hand it the first free address of the pool instead.
+    lbipam.cilium.io/ips: "10.20.22.12"
 spec:
   selector:
     app: qbittorrent       

@@ -1,0 +1,30 @@
+# LoadBalancer IP pool and L2 (ARP) announcements. Needs the CRDs the Cilium operator registers at
+# startup (wave 0) and must exist before the first LoadBalancer Service, the Envoy Gateway (wave 5).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium-config
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+    targetRevision: main
+    path: infrastructure/configs/cilium
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

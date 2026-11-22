@@ -1,0 +1,35 @@
+# The app-of-apps. Applied once by hand (bootstrap/README.md); it is not under clusters/production, so
+# re-apply this file after editing it.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  # `default` is the only project that exists before the first sync.
+  project: default
+  source:
+    repoURL: https://github.com/Mortenkp91/homelab-cluster.git
+    targetRevision: main
+    path: clusters/production
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    # A Degraded child Application fails the whole multi-wave sync, and once retries run out Argo CD
+    # does not auto-sync the same commit again. The first build takes a while (image pulls, ACME), so
+    # never give up, and pick up new commits while retrying.
+    retry:
+      limit: -1
+      refresh: true
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

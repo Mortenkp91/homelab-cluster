@@ -1,0 +1,3 @@
+# The CRDs are chart templates. Two of them exceed the 262144 byte annotation limit of client-side
+# apply, so the Application must keep ServerSideApply=true.
+installCRDs: true

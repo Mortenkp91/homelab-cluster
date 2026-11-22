@@ -1,0 +1,7 @@
+# Resources shared by every media app: the namespace and the shared media volume claim.
+# The apps themselves are separate bases in the sub-directories.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - shared-pvc.yaml

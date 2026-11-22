@@ -35,3 +35,8 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Local CI tooling (scripts/validate.sh, scripts/render.sh, scripts/install-tools.sh):
+# pulled Helm charts, downloaded schemas, rendered manifests, tool binaries
+.cache/
+__pycache__/

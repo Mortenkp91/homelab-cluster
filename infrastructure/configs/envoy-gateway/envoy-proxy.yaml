@@ -1,0 +1,31 @@
+# Data plane for homelab-gateway (referenced from the Gateway, not the GatewayClass, because the
+# pinned IP can only belong to one Gateway).
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: homelab-gateway
+  namespace: envoy-gateway-system
+spec:
+  # Worker threads. Envoy defaults to one per CPU core, which only costs memory here.
+  concurrency: 2
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+        container:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+      envoyService:
+        type: LoadBalancer
+        annotations:
+          # Static address from the Cilium LB-IPAM pool; external-dns points every record at it.
+          lbipam.cilium.io/ips: "10.20.22.11"
+        # Cilium L2 announcements do not support externalTrafficPolicy: Local. On a single node
+        # Cilium delivers to the local Envoy pod without SNAT anyway, so the client IP is kept.
+        externalTrafficPolicy: Cluster

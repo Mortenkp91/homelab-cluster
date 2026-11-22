@@ -1,0 +1,67 @@
+# Values for the argo-cd chart (https://argoproj.github.io/argo-helm). The chart version is pinned in
+# clusters/production/infrastructure/argocd.yaml. bootstrap/README.md renders this same file for the
+# first install, so every setting belongs here and nowhere else.
+global:
+  # Rendered into argocd-cm as url: https://argocd.mkped.com
+  domain: argocd.mkped.com
+
+configs:
+  params:
+    # TLS is terminated at the Envoy Gateway (homelab-gateway), so argocd-server serves plain HTTP.
+    server.insecure: true
+  cm:
+    # Argo CD ships no health check for Application (removed in 1.8). Without it the root app treats a
+    # child Application as healthy the moment it is created and sync waves do not wait for it.
+    # https://argo-cd.readthedocs.io/en/stable/operator-manual/health/#argocd-app
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
+    # resource.exclusions is deliberately left at the chart default: it already excludes CiliumIdentity,
+    # CiliumEndpoint and CiliumEndpointSlice, which is what the Cilium docs ask Argo CD users to do.
+    # Resource tracking also stays at the default (annotation). External Secrets copies an
+    # ExternalSecret's labels onto the Secret it generates, so label tracking would make Argo CD prune
+    # those Secrets.
+
+# Single user with the built-in admin account: no SSO, no notifications.
+dex:
+  enabled: false
+notifications:
+  enabled: false
+
+# One replica of everything (chart default) with small requests: the node has 16 GB and also runs the
+# media apps. No limits, so a large Helm render or a full resync cannot get the GitOps engine OOM-killed.
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+server:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 96Mi
+repoServer:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+applicationSet:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+redis:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
