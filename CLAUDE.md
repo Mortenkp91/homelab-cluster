@@ -68,7 +68,7 @@ scripts/                      # validate.sh / render.sh, shared by CI and local 
 - **Envoy Gateway**: Gateway API implementation on 10.20.22.11, with HTTP->HTTPS redirect. The vendored Gateway API CRDs in `infrastructure/base/gateway-api/` must match the version Envoy Gateway supports
 - **cert-manager**: TLS certificates via Let's Encrypt (DNS-01 through Cloudflare)
 - **external-dns**: Cloudflare records for every HTTPRoute, all pointing at the gateway IP
-- **Local PersistentVolumes** (`infrastructure/base/local/`): static PVs on `mpe-001`; app config lives under `/srv/nfs/configs/<app>`. Argo CD never prunes them
+- **Local PersistentVolumes** (`infrastructure/base/local/`): static PVs on `mpe-001`; app config lives under `/home/mkp/homelab-persistence/configs/<app>`, owned by the admin user and group-writable for `mediagroup` (gid 2001, the group the media pods run with; `bootstrap/persistence-permissions.sh`). Argo CD never prunes them, and a PV's path is immutable: changing it means deleting and recreating the PV and its PVC
 
 ## Validating changes
 

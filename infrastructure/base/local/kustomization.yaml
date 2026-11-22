@@ -5,6 +5,6 @@ resources:
 # Argo CD must never delete a PV: not when it disappears from Git (Prune=false) and not when the
 # Application is deleted (Delete=false). To retire a PV, remove it from Git and `kubectl delete pv`
 # it by hand. The volume source and nodeAffinity are immutable: changing them in Git makes the
-# sync fail until the PV is deleted and recreated by hand (the data under /srv/nfs is not touched).
+# sync fail until the PV is deleted and recreated by hand (the data under /home/mkp/homelab-persistence is not touched).
 commonAnnotations:
   argocd.argoproj.io/sync-options: Prune=false,Delete=false

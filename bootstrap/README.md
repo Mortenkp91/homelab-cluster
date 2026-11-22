@@ -38,7 +38,7 @@ one:
 - The `infra-resources`, `infra-configs` and `apps` Kustomizations already in the cluster keep
   reconciling with `prune: true`. Expect them to start removing what is gone from Git (Traefik, the
   monitoring stack, the Flux HelmReleases) while the app HTTPRoutes move to a Gateway that does not exist
-  there. The old cluster ends up half dismantled. Data under `/srv/nfs` is not touched.
+  there. The old cluster ends up half dismantled. Data under `/home/mkp/homelab-persistence` is not touched.
 
 Safe order:
 
@@ -70,7 +70,7 @@ Kubernetes object, all container images, and any `local-path` volume) and `/var/
 
 What survives:
 
-- **App data under `/srv/nfs`.** The uninstall script does not touch it. Every volume the apps use is a
+- **App data under `/home/mkp/homelab-persistence`.** The uninstall script does not touch it. Every volume the apps use is a
   static `local` PersistentVolume with `persistentVolumeReclaimPolicy: Retain` pointing at a directory
   there (`infrastructure/base/local/local-volume.yaml`), and every PVC under `apps/base` selects its PV by
   name (`spec.volumeName`, `storageClassName: ""`). On the new cluster Argo CD recreates the PV objects
@@ -81,14 +81,14 @@ What survives:
 What does not: Prometheus/Grafana/Loki data (the monitoring stack is removed anyway), TLS certificates
 (reissued), and the `azure-secret-sp` Secret (see below).
 
-`/srv/nfs` is on the same disk as the OS (`/`), so "survives" means "is not deleted by these steps", not
+`/home/mkp/homelab-persistence` is on the same disk as the OS (`/`), so "survives" means "is not deleted by these steps", not
 "is safe from a mistake". Copy at least the app configuration to another machine or disk first. Stop the
 apps for a consistent copy of their SQLite databases (Flux must be suspended, step 0, or it scales them
 back up):
 
 ```bash
 for ns in media frigate homeassistant; do kubectl -n "$ns" scale deployment --all --replicas=0; done
-sudo tar --zstd -cf /path/on/another/disk/nfs-configs-$(date +%F).tar.zst -C /srv/nfs configs
+sudo tar --zstd -cf /path/on/another/disk/homelab-configs-$(date +%F).tar.zst -C /home/mkp/homelab-persistence configs
 ```
 
 Keep the Key Vault credential, so step 4 is one command. The file contains a secret: keep it out of the
@@ -107,8 +107,12 @@ Pre-flight checks:
 hostname
 
 # Every directory a static PV points at must exist before the apps sync.
-ls -d /srv/nfs/media /srv/nfs/nvr \
-  /srv/nfs/configs/{qbittorrent,jellyfin,prowlarr,sonarr,radarr,jellyseer,frigate,homeassistant}
+ls -d /home/mkp/homelab-persistence/media /home/mkp/homelab-persistence/nvr \
+  /home/mkp/homelab-persistence/configs/{qbittorrent,jellyfin,prowlarr,sonarr,radarr,jellyseer,frigate,homeassistant}
+
+# ... and be writable by the group mediagroup (gid 2001), which the media pods run with. You stay the owner.
+# Run it again after restoring a backup.
+sudo bootstrap/persistence-permissions.sh
 
 # The vault must hold every key the ExternalSecrets ask for.
 az login
@@ -442,7 +446,7 @@ and `grafana.mkped.com` (and their TXT ownership records) stay in Cloudflare unt
   you mean it. Removing a single manifest inside an app that still exists is pruned normally.
 - **Retiring a static PV**: the `local` Application never prunes and the PVs carry
   `Prune=false,Delete=false`. Remove the PV from Git, then `kubectl delete pv <name>`. The directory
-  under `/srv/nfs` is yours to delete.
+  under `/home/mkp/homelab-persistence` is yours to delete.
 - **The parking CronJob** (`apps/production/automatic-parking-registration`) is excluded in
   `clusters/production/apps.yaml`, because it was not deployed under Flux either. Remove the exclude to
   run it.
