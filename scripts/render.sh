@@ -23,14 +23,14 @@
 #
 # Environment:
 #   GITOPS_CACHE_DIR    chart cache (default: .cache in this repo)
-#   KUBERNETES_VERSION  passed to helm as --kube-version (default: 1.35.0)
+#   KUBERNETES_VERSION  passed to helm as --kube-version (default: 1.37.0)
 #   GITOPS_REPO_URL     this repo's URL, to check Application repoURLs against
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(dirname "$SCRIPT_DIR")
 CACHE_DIR=${GITOPS_CACHE_DIR:-$ROOT/.cache}
-KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.35.0} # the k3s minor the node runs; same default as validate.sh
+KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.37.0} # the k3s minor the node runs; same default as validate.sh
 
 if [[ ${1:-} == --root ]]; then
   ROOT=$(cd "$2" && pwd)

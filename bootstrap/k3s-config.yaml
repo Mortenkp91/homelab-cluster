@@ -11,6 +11,9 @@ disable-kube-proxy: true
 disable:
   - traefik # Envoy Gateway is the ingress
   - servicelb # Cilium LB-IPAM hands out LoadBalancer IPs (10.20.22.10-20)
+  # k3s v1.37 packages its own Gateway API CRD chart and applies it with forceConflicts and
+  # takeOwnership. The gateway-api Application owns those CRDs (infrastructure/base/gateway-api).
+  - gateway-api-crd
 
 # k3s defaults, written out because infrastructure/base/cilium/values.yaml hardcodes the pod CIDR
 # (ipam and native routing). Change them together or not at all.

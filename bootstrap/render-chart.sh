@@ -8,7 +8,7 @@
 # before Argo CD can do them itself (Cilium, Argo CD) use exactly what is pinned in Git.
 # Only renders; pipe the output to kubectl yourself. Needs helm, yq (mikefarah v4) and kubectl.
 #
-# Set KUBE_VERSION (e.g. KUBE_VERSION=1.35.4) to render without asking a cluster for its version.
+# Set KUBE_VERSION (e.g. KUBE_VERSION=1.37.2) to render without asking a cluster for its version.
 set -euo pipefail
 
 app=${1:?usage: render-chart.sh <path to an Application yaml with spec.sources>}

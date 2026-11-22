@@ -34,7 +34,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(dirname "$SCRIPT_DIR")
 export GITOPS_CACHE_DIR=${GITOPS_CACHE_DIR:-$ROOT/.cache}
-export KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.35.0} # the k3s minor the node runs; same default as render.sh
+export KUBERNETES_VERSION=${KUBERNETES_VERSION:-1.37.0} # the k3s minor the node runs; same default as render.sh
 # Comma-separated kinds that are knowingly not schema-validated; say why here.
 #   CustomResourceDefinition: the Kubernetes schema set kubeconform uses does not
 #     publish apiextensions.k8s.io, so there is nothing to validate against. The
