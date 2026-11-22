@@ -11,7 +11,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/media
+    path: /home/mkp/homelab-persistence/media
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -34,7 +34,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/qbittorrent
+    path: /home/mkp/homelab-persistence/configs/qbittorrent
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -56,7 +56,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/jellyfin
+    path: /home/mkp/homelab-persistence/configs/jellyfin
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -78,7 +78,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/prowlarr
+    path: /home/mkp/homelab-persistence/configs/prowlarr
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -100,7 +100,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/sonarr
+    path: /home/mkp/homelab-persistence/configs/sonarr
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -122,7 +122,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/radarr
+    path: /home/mkp/homelab-persistence/configs/radarr
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -144,7 +144,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/jellyseer
+    path: /home/mkp/homelab-persistence/configs/jellyseer
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -166,7 +166,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/nvr
+    path: /home/mkp/homelab-persistence/nvr
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -188,7 +188,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/frigate
+    path: /home/mkp/homelab-persistence/configs/frigate
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -210,7 +210,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   local:
-    path: /srv/nfs/configs/homeassistant
+    path: /home/mkp/homelab-persistence/configs/homeassistant
   nodeAffinity:
     required:
       nodeSelectorTerms:

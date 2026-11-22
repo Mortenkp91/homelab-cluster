@@ -26,7 +26,7 @@ spec:
     # Keeps the resources-finalizer off the generated Applications. With the finalizer (the
     # ApplicationSet default), removing or renaming an app directory, or deleting this ApplicationSet,
     # would cascade-delete the app's Namespace and with it every PVC. The data would survive (the
-    # static PVs are Retain local volumes under /srv/nfs), but each PV would be left Released and refuse to
+    # static PVs are Retain local volumes under /home/mkp/homelab-persistence), but each PV would be left Released and refuse to
     # rebind until its spec.claimRef is cleared by hand. Without the finalizer, a removed app is only
     # forgotten by Argo CD; delete its namespace yourself when you really mean it.
     preserveResourcesOnDeletion: true
